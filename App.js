@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { FlatList, Image, Platform, Linking, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import AndroidOpenSettings from 'react-native-android-open-settings'
+import AxisPad from 'react-native-axis-pad';
 
 
 global.Buffer = Buffer
@@ -55,7 +56,9 @@ class ControllerProject extends Component {
       unpairedDevices: [],
       connected: false,
       section: 0,
-      modalVisible: false
+      modalVisible: false,
+      power: 0,
+      angle: 0
     }
   }
 
@@ -219,6 +222,24 @@ class ControllerProject extends Component {
     this.setModalVisible(!this.state.modalVisible);
   }
 
+  joystickHandler(x, y) {
+    console.log(x, y);
+    y = y * (-1);
+    var r = Math.sqrt(x * x + y * y);
+    var theta = Math.atan2(y, x);
+    var tAngle = Math.round((theta * 180) / Math.PI);
+    var tPower = Math.round(r * 100 / (Math.sqrt(2)));
+  
+    if (tPower > 71) {
+      tPower = 71;
+    }
+  
+    tPower = Math.round((tPower * 100) / 71);
+    /* console.log(tPower, tAngle); */
+    this.setState({ power: tPower });
+    this.setState({ angle: tAngle });
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -236,11 +257,33 @@ class ControllerProject extends Component {
                     source={require('./images/baseline_bluetooth_white.png')}
                     style={styles.iconImage}
                   />
-              )}
+                )}
             </TouchableOpacity>
           </View>
         </View>
         <View style={{ marginTop: 22 }}>
+          
+          <View style={styles.padContainer}>
+            <View>
+              <AxisPad
+                size={200}
+                handlerSize={75}
+                step={1 / 360}
+                resetOnRelease={true}
+                autoCenter={false}
+                onValue={({ x, y }) => {
+                  this.joystickHandler(x, y);
+                }}
+              >
+              </AxisPad>
+            </View>
+            <View style={styles.boxContainer}>
+              <View style={styles.box}><Text>Power: {this.state.power} </Text></View>
+              <View style={styles.box}><Text>Angle: {this.state.angle} </Text></View>
+            </View>
+          </View>
+
+
           <Modal
             animationType="slide"
             visible={this.state.modalVisible}
@@ -270,11 +313,13 @@ class ControllerProject extends Component {
               <Button
                 title='DISPOSITIVO NON TROVATO?'
                 onPress={() => {
-                  { Platform.OS === 'android' ? (
+                  {
+                  Platform.OS === 'android' ? (
                     AndroidOpenSettings.bluetoothSettings()
                   ) : (
-                    Linking.openURL('prefs:root=General&path=Bluetooth')
-                  )};
+                      Linking.openURL('prefs:root=General&path=Bluetooth')
+                    )
+                  };
                 }}
               />
             </View>
@@ -386,6 +431,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#7B1FA2',
     borderRadius: 2,
     elevation: 2
+  },
+
+  // Joystick styles
+  padContainer: {
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  boxContainer: {
+    flexDirection: 'row'
+  },
+  box: {
+    width: '50%',
+    fontSize: 10,
+    backgroundColor: '#eee',
+    justifyContent: "space-between"
   }
 })
 
