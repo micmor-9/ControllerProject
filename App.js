@@ -1,7 +1,7 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { FlatList, Image, Platform, Linking, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Button, FlatList, Image, Platform, Linking, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad';
@@ -10,9 +10,9 @@ import AxisPad from 'react-native-axis-pad';
 global.Buffer = Buffer
 const iconv = require('iconv-lite')
 
-const Button = ({ title, onPress, style, textStyle }) =>
-  <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
-    <Text style={[styles.buttonText, textStyle]}>{title.toUpperCase()}</Text>
+const MaterialButton = ({ title, onPress, style, textStyle }) =>
+  <TouchableOpacity style={[styles.MaterialButton, style]} onPress={onPress}>
+    <Text style={[styles.MaterialButtonText, textStyle]}>{title.toUpperCase()}</Text>
   </TouchableOpacity>
 
 
@@ -95,38 +95,6 @@ class ControllerProject extends Component {
   }
 
   /**
-   * [android]
-   * enable bluetooth on device
-   */
-  enable() {
-    BluetoothSerial.enable()
-      .then((res) => this.setState({ isEnabled: true }))
-      .catch((err) => Toast.showShortBottom(err.message))
-  }
-
-  /**
-   * [android]
-   * disable bluetooth on device
-   */
-  disable() {
-    BluetoothSerial.disable()
-      .then((res) => this.setState({ isEnabled: false }))
-      .catch((err) => Toast.showShortBottom(err.message))
-  }
-
-  /**
-   * [android]
-   * toggle bluetooth
-   */
-  toggleBluetooth(value) {
-    if (value === true) {
-      this.enable()
-    } else {
-      this.disable()
-    }
-  }
-
-  /**
    * Connect to bluetooth device by id
    * @param  {Object} device
    */
@@ -172,7 +140,6 @@ class ControllerProject extends Component {
 
     BluetoothSerial.write(message)
       .then((res) => {
-        Toast.showShortBottom('Messaggio inviato correttamente al dispositivo')
         this.setState({ connected: true })
       })
       .catch((err) => Toast.showShortBottom(err.message))
@@ -197,23 +164,6 @@ class ControllerProject extends Component {
     this.setState({ devices: newDevices });
   }
 
-  writePackets(message, packetSize = 64) {
-    const toWrite = iconv.encode(message, 'cp852')
-    const writePromises = []
-    const packetCount = Math.ceil(toWrite.length / packetSize)
-
-    for (var i = 0; i < packetCount; i++) {
-      const packet = new Buffer(packetSize)
-      packet.fill(' ')
-      toWrite.copy(packet, 0, i * packetSize, (i + 1) * packetSize)
-      writePromises.push(BluetoothSerial.write(packet))
-    }
-
-    Promise.all(writePromises)
-      .then((result) => {
-      })
-  }
-
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -223,7 +173,6 @@ class ControllerProject extends Component {
   }
 
   joystickHandler(x, y) {
-    console.log(x, y);
     y = y * (-1);
     var r = Math.sqrt(x * x + y * y);
     var theta = Math.atan2(y, x);
@@ -235,9 +184,22 @@ class ControllerProject extends Component {
     }
   
     tPower = Math.round((tPower * 100) / 71);
-    /* console.log(tPower, tAngle); */
     this.setState({ power: tPower });
     this.setState({ angle: tAngle });
+    this.sendMovement();
+  }
+
+  sendMovement() {
+    var angleString = '(~' + this.state.angle.toString + ')';
+    var powerString = '(^' + this.state.power.toString + ')';
+    var stringToSend = angleString + ':' + powerString;
+
+    this.write(stringToSend);
+    
+  }
+
+  testButtonHandler() {
+    this.write('(T1)');
   }
 
   render() {
@@ -281,6 +243,12 @@ class ControllerProject extends Component {
               <View style={styles.box}><Text>Power: {this.state.power} </Text></View>
               <View style={styles.box}><Text>Angle: {this.state.angle} </Text></View>
             </View>
+            <View style={{marginVertical: 10}}>
+              <Button 
+                title="Test" 
+                onPress={() => this.testButtonHandler}
+              />
+            </View>
           </View>
 
 
@@ -300,17 +268,17 @@ class ControllerProject extends Component {
                 />
               ) : null
               }
-              <Button
+              <MaterialButton
                 title='CHIUDI'
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
                 }}
               />
-              <Button
+              <MaterialButton
                 title='AGGIORNA'
                 onPress={() => this.updateDevices()}
               />
-              <Button
+              <MaterialButton
                 title='DISPOSITIVO NON TROVATO?'
                 onPress={() => {
                   {
@@ -411,14 +379,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#ddd'
   },
-  button: {
+  MaterialButton: {
     height: '5%',
     margin: 5,
     paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center'
   },
-  buttonText: {
+  MaterialButtonText: {
     color: '#004c8b',
     fontWeight: 'bold',
     fontSize: 14,
@@ -427,7 +395,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center'
   },
-  buttonRaised: {
+  MaterialButtonRaised: {
     backgroundColor: '#7B1FA2',
     borderRadius: 2,
     elevation: 2
