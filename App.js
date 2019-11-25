@@ -123,56 +123,6 @@ class ControllerProject extends Component {
   }
 
   /**
-   * [android]
-   * Discover unpaired devices, works only in android
-   */
-  discoverUnpaired() {
-    if (this.state.discovering) {
-      return false
-    } else {
-      this.setState({ discovering: true })
-      BluetoothSerial.discoverUnpairedDevices()
-        .then((unpairedDevices) => {
-          this.setState({ unpairedDevices, discovering: false })
-        })
-        .catch((err) => Toast.showShortBottom(err.message))
-    }
-  }
-
-  /**
-   * [android]
-   * Discover unpaired devices, works only in android
-   */
-  cancelDiscovery() {
-    if (this.state.discovering) {
-      BluetoothSerial.cancelDiscovery()
-        .then(() => {
-          this.setState({ discovering: false })
-        })
-        .catch((err) => Toast.showShortBottom(err.message))
-    }
-  }
-
-  /**
-   * [android]
-   * Pair device
-   */
-  pairDevice(device) {
-    BluetoothSerial.pairDevice(device.id)
-      .then((paired) => {
-        if (paired) {
-          Toast.showShortBottom(`Device ${device.name} paired successfully`)
-          const devices = this.state.devices
-          devices.push(device)
-          this.setState({ devices, unpairedDevices: this.state.unpairedDevices.filter((d) => d.id !== device.id) })
-        } else {
-          Toast.showShortBottom(`Device ${device.name} pairing failed`)
-        }
-      })
-      .catch((err) => Toast.showShortBottom(err.message))
-  }
-
-  /**
    * Connect to bluetooth device by id
    * @param  {Object} device
    */
