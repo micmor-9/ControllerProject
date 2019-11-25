@@ -87,7 +87,6 @@ class ControllerProject extends Component {
     BluetoothSerial.requestEnable()
       .then((res) => this.setState({ isEnabled: true }))
       .catch((err) => Toast.showShortBottom(err.message))
-    this.listDevices();
   }
 
   /**
@@ -163,12 +162,12 @@ class ControllerProject extends Component {
    */
   write(message) {
     if (!this.state.connected) {
-      Toast.showShortBottom('You must connect to device first')
+      Toast.showShortBottom('Devi prima collegarti ad un dispositivo')
     }
 
     BluetoothSerial.write(message)
       .then((res) => {
-        Toast.showShortBottom('Successfuly wrote to device')
+        Toast.showShortBottom('Messaggio inviato correttamente al dispositivo')
         this.setState({ connected: true })
       })
       .catch((err) => Toast.showShortBottom(err.message))
@@ -176,9 +175,20 @@ class ControllerProject extends Component {
 
   onDevicePress(device) {
     this.connect(device);
-    if(this.state.modalVisible) {
+    if (this.state.modalVisible) {
       this.setModalVisible(false);
     }
+  }
+
+  updateDevices() {
+    BluetoothSerial.list()
+      .then((values) => {
+        this.setState({ devices: values })
+      })
+  }
+
+  setDevices(newDevices) {
+    this.setState({ devices: newDevices });
   }
 
   writePackets(message, packetSize = 64) {
@@ -198,13 +208,6 @@ class ControllerProject extends Component {
       })
   }
 
-  listDevices() {
-    BluetoothSerial.list().then((values) => {
-      const [isEnabled, devices] = values
-      this.setState({ isEnabled, devices })
-    })
-  }
-
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -219,22 +222,19 @@ class ControllerProject extends Component {
         <View style={styles.topBar}>
           <Text style={styles.heading}>Controller</Text>
           <View style={styles.enableInfoWrapper}>
-            {this.state.connected ? (
-              <TouchableOpacity onPress={() => { this.openDevicesModal() }}>
+            <TouchableOpacity onPress={() => { this.openDevicesModal() }}>
+              {this.state.connected ? (
                 <Image
                   source={require('./images/baseline_bluetooth_connected_white.png')}
                   style={styles.iconImage}
                 />
-              </TouchableOpacity>
-            ) : (
-                <TouchableOpacity onPress={() => { this.openDevicesModal() }}>
+              ) : (
                   <Image
                     source={require('./images/baseline_bluetooth_white.png')}
                     style={styles.iconImage}
                   />
-                </TouchableOpacity>
-            )}
-
+                )}
+            </TouchableOpacity>
           </View>
         </View>
         <View style={{ marginTop: 22 }}>
@@ -245,17 +245,24 @@ class ControllerProject extends Component {
               this.setModalVisible(false);
             }}>
             <View>
-              <DeviceList
-                showConnectedIcon={this.state.section === 0}
-                connectedId={this.state.device && this.state.device.id}
-                devices={this.state.devices}
-                onDevicePress={(device) => this.onDevicePress(device)}
-              />
+              {this.state.isEnabled ? (
+                <DeviceList
+                  showConnectedIcon={this.state.section === 0}
+                  connectedId={this.state.device && this.state.device.id}
+                  devices={this.state.devices}
+                  onDevicePress={(device) => this.onDevicePress(device)}
+                />
+              ) : null
+              }
               <Button
                 title='CHIUDI'
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
                 }}
+              />
+              <Button
+                title='AGGIORNA'
+                onPress={() => this.updateDevices()}
               />
               <Button
                 title='DISPOSITIVO NON TROVATO?'
