@@ -1,8 +1,10 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { FlatList, Image, Linking, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Platform, Linking, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import BluetoothSerial from 'react-native-bluetooth-serial'
+import AndroidOpenSettings from 'react-native-android-open-settings'
+
 
 global.Buffer = Buffer
 const iconv = require('iconv-lite')
@@ -185,6 +187,7 @@ class ControllerProject extends Component {
       .then((values) => {
         this.setState({ devices: values })
       })
+    Toast.showShortBottom('Lista dispositivi aggiornata')
   }
 
   setDevices(newDevices) {
@@ -233,7 +236,7 @@ class ControllerProject extends Component {
                     source={require('./images/baseline_bluetooth_white.png')}
                     style={styles.iconImage}
                   />
-                )}
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -267,7 +270,11 @@ class ControllerProject extends Component {
               <Button
                 title='DISPOSITIVO NON TROVATO?'
                 onPress={() => {
-                  Linking.openURL('');
+                  { Platform.OS === 'android' ? (
+                    AndroidOpenSettings.bluetoothSettings()
+                  ) : (
+                    Linking.openURL('prefs:root=General&path=Bluetooth')
+                  )};
                 }}
               />
             </View>
