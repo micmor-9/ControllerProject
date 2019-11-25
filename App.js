@@ -145,6 +145,23 @@ class ControllerProject extends Component {
       .catch((err) => Toast.showShortBottom(err.message))
   }
 
+  writePackets (message, packetSize = 64) {
+    const toWrite = iconv.encode(message, 'cp852')
+    const writePromises = []
+    const packetCount = Math.ceil(toWrite.length / packetSize)
+
+    for (var i = 0; i < packetCount; i++) {
+      const packet = new Buffer(packetSize)
+      packet.fill(' ')
+      toWrite.copy(packet, 0, i * packetSize, (i + 1) * packetSize)
+      writePromises.push(BluetoothSerial.write(packet))
+    }
+
+    Promise.all(writePromises)
+    .then((result) => {
+    })
+  }
+
   onDevicePress(device) {
     this.connect(device);
     if (this.state.modalVisible) {
@@ -158,10 +175,6 @@ class ControllerProject extends Component {
         this.setState({ devices: values })
       })
     Toast.showShortBottom('Lista dispositivi aggiornata')
-  }
-
-  setDevices(newDevices) {
-    this.setState({ devices: newDevices });
   }
 
   setModalVisible(visible) {
@@ -193,9 +206,7 @@ class ControllerProject extends Component {
     var angleString = '(~' + this.state.angle.toString + ')';
     var powerString = '(^' + this.state.power.toString + ')';
     var stringToSend = angleString + ':' + powerString;
-
-    this.write(stringToSend);
-    
+    this.writePackets(stringToSend);
   }
 
   testButtonHandler() {
