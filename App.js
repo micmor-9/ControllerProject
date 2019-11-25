@@ -180,7 +180,7 @@ class ControllerProject extends Component {
     this.setState({ connecting: true })
     BluetoothSerial.connect(device.id)
       .then((res) => {
-        Toast.showShortBottom(`Connected to device ${device.name}`)
+        Toast.showShortBottom(`Connesso al dispositivo ${device.name}`)
         this.setState({ device, connected: true, connecting: false })
       })
       .catch((err) => Toast.showShortBottom(err.message))
@@ -225,7 +225,10 @@ class ControllerProject extends Component {
   }
 
   onDevicePress(device) {
-    this.connect(device)
+    this.connect(device);
+    if(this.state.modalVisible) {
+      this.setModalVisible(false);
+    }
   }
 
   writePackets(message, packetSize = 64) {
@@ -246,15 +249,10 @@ class ControllerProject extends Component {
   }
 
   listDevices() {
-    Promise.all([
-      BluetoothSerial.isEnabled(),
-      BluetoothSerial.list()
-    ])
-      .then((values) => {
-        const [isEnabled, devices] = values
-        this.setState({ isEnabled, devices })
-      })
-    this.render();
+    BluetoothSerial.list().then((values) => {
+      const [isEnabled, devices] = values
+      this.setState({ isEnabled, devices })
+    })
   }
 
   setModalVisible(visible) {
@@ -271,17 +269,22 @@ class ControllerProject extends Component {
         <View style={styles.topBar}>
           <Text style={styles.heading}>Controller</Text>
           <View style={styles.enableInfoWrapper}>
-            <Image
-              source={require('./images/ic_done_black_24dp.png')}
-              style={styles.iconImage}
-              visible={this.connected}
-            />
-            <TouchableOpacity onPress={() => { this.openDevicesModal() }}>
-              <Image
-                source={require('./images/baseline_bluetooth_connected_white.png')}
-                style={styles.iconImage}
-              />
-            </TouchableOpacity>
+            {this.state.connected ? (
+              <TouchableOpacity onPress={() => { this.openDevicesModal() }}>
+                <Image
+                  source={require('./images/baseline_bluetooth_connected_white.png')}
+                  style={styles.iconImage}
+                />
+              </TouchableOpacity>
+            ) : (
+                <TouchableOpacity onPress={() => { this.openDevicesModal() }}>
+                  <Image
+                    source={require('./images/baseline_bluetooth_white.png')}
+                    style={styles.iconImage}
+                  />
+                </TouchableOpacity>
+            )}
+
           </View>
         </View>
         <View style={{ marginTop: 22 }}>
