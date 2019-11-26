@@ -1,10 +1,10 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { Button, FlatList, Image, Platform, Linking, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import BluetoothSerial from 'react-native-bluetooth-serial'
+import { Button, FlatList, Image, Linking, Modal, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import AndroidOpenSettings from 'react-native-android-open-settings'
-import AxisPad from 'react-native-axis-pad';
+import AxisPad from 'react-native-axis-pad'
+import BluetoothSerial from 'react-native-bluetooth-serial'
 import styles from './styles.js'
 
 
@@ -48,8 +48,9 @@ const DeviceList = ({ devices, connectedId, showConnectedIcon, onDevicePress }) 
   />
 
 class ControllerProject extends Component {
+
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       isEnabled: false,
       devices: [],
@@ -63,8 +64,8 @@ class ControllerProject extends Component {
       wifiProtocol: '',
       wifiUsername: '',
       wifiPassword: '',
-      power: 0,
-      angle: 0
+      angle: 0,
+      power: 0
     }
   }
 
@@ -129,13 +130,13 @@ class ControllerProject extends Component {
   write(message) {
     if (!this.state.connected) {
       Toast.showShortBottom('Devi prima collegarti ad un dispositivo')
+    } else {
+      BluetoothSerial.write(message)
+        .then((res) => {
+          this.setState({ connected: true })
+        })
+        .catch((err) => Toast.showShortBottom(err.message))
     }
-
-    BluetoothSerial.write(message)
-      .then((res) => {
-        this.setState({ connected: true })
-      })
-      .catch((err) => Toast.showShortBottom(err.message))
   }
   // Funzione che consente l'esecuzione asincrona di due o piu thread
   writePackets(message, packetSize = 64) {
@@ -202,9 +203,10 @@ class ControllerProject extends Component {
     }
 
     tPower = Math.round((tPower * 100) / 71);
-    this.setState({ power: tPower });
-    this.setState({ angle: tAngle });
-    this.sendMovement();
+    this.setState({ power: tPower, angle: tAngle });
+    if (this.state.connected) {
+      this.sendMovement();
+    }
   }
 
   sendMovement() {
@@ -215,15 +217,25 @@ class ControllerProject extends Component {
   }
 
   testButtonHandler() {
+    Toast.showShortBottom('Messaggio (T1) inviato al dispositivo. ');
     this.write('(T1)');
+
   }
-  powerButtonHandler(){
+
+  powerButtonHandler() {
+    Toast.showShortBottom('Messaggio (P1) inviato al dispositivo. ');
     this.write('(P1)');
+
   }
-  resetButtonHandler(){
+
+  resetButtonHandler() {
+    Toast.showShortBottom('Messaggio (R1) inviato al dispositivo. ');
     this.write('(R1)');
+
   }
-  lightButtonHandler(){
+
+  lightButtonHandler() {
+    Toast.showShortBottom('Messaggio (L1) inviato al dispositivo. ');
     this.write('(L1)');
   }
 
@@ -270,26 +282,42 @@ class ControllerProject extends Component {
               >
               </AxisPad>
             </View>
+
             <View style={styles.boxContainer}>
               <View style={styles.box}><Text>Power: {this.state.power} </Text></View>
               <View style={styles.box}><Text>Angle: {this.state.angle} </Text></View>
             </View>
+          </View>
 
-            <View style={styles.buttonContainer}>
-              <Button 
-                onPress={() => this.testButtonHandler}
-              />
+          <View style={styles.buttonContainer}>
+            <View style={styles.actionButton}>
               <Button
+                title="Test"
+                onPress={() => this.testButtonHandler()}
+              />
+            </View>
+
+            <View style={styles.actionButton}>
+              <Button
+                style={styles.actionButton}
                 title="Power"
-                onPress={() => this.powerButtonHandler}
+                onPress={() => this.powerButtonHandler()}
               />
+            </View>
+
+            <View style={styles.actionButton}>
               <Button
+                style={styles.actionButton}
                 title="Reset"
-                onPress= {() => this.resetButtonHandler}
+                onPress={() => this.resetButtonHandler()}
               />
+            </View>
+
+            <View style={styles.actionButton}>
               <Button
+                style={styles.actionButton}
                 title="Light"
-                onPress= {() => this.lightButtonHandler}
+                onPress={() => this.lightButtonHandler()}
               />
             </View>
           </View>
@@ -364,7 +392,7 @@ class ControllerProject extends Component {
               </View>
             </View>
             <MaterialButton
-              title='CHIUDI'              
+              title='CHIUDI'
               onPress={() => {
                 this.setWifiModalVisible(!this.state.wifiModalVisible);
               }}

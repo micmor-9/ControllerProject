@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native';
 
 export default styles = StyleSheet.create({
     container: {
@@ -120,7 +120,15 @@ export default styles = StyleSheet.create({
     },
   
     buttonContainer: {
-      marginVertical:10,
+      marginVertical: 10,
+      flexDirection: "row"
+    },
+
+    actionButton: {
+      width: "20%",
+      marginHorizontal: 10,
+      alignContent: "center",
+      justifyContent: "space-between"
     },
                                           
     topBarButton: {
@@ -145,6 +153,4 @@ export default styles = StyleSheet.create({
     wifiFieldView: {
       flexDirection: "row"
     }
-
-
   })
