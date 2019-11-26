@@ -51,9 +51,7 @@ class ControllerProject extends Component {
     super(props)
     this.state = {
       isEnabled: false,
-      discovering: false,
       devices: [],
-      unpairedDevices: [],
       connected: false,
       section: 0,
       modalVisible: false,
