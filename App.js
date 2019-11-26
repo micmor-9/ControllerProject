@@ -58,6 +58,11 @@ class ControllerProject extends Component {
       modalVisible: false,
       wifiModalVisible: false,
       wifiName: '',
+      wifiIp: '',
+      wifiPort: '',
+      wifiProtocol: '',
+      wifiUsername: '',
+      wifiPassword: '',
       power: 0,
       angle: 0
     }
@@ -276,10 +281,73 @@ class ControllerProject extends Component {
             }}>
 
             <View>
-              <Text>Nome</Text>
-              <TextInput value={this.state.wifiName}></TextInput>
+              <View style={styles.wifiFieldView}>
+                <Text style={styles.wifiFieldLabel}>Nome</Text>
+                <TextInput
+                  style={styles.wifiField}
+                  value={this.state.wifiName}
+                  onChangeText={(enteredText) => {
+                    this.setState({ wifiName: enteredText })
+                  }}
+                />
+              </View>
+              <View style={styles.wifiFieldView}>
+                <Text style={styles.wifiFieldLabel}>IP</Text>
+                <TextInput
+                  style={styles.wifiField}
+                  value={this.state.wifiIp}
+                  onChangeText={(enteredText) => {
+                    this.setState({ wifiIp: enteredText })
+                  }}
+                />
+              </View>
+              <View style={styles.wifiFieldView}>
+                <Text style={styles.wifiFieldLabel}>Port</Text>
+                <TextInput
+                  style={styles.wifiField}
+                  value={this.state.wifiPort}
+                  onChangeText={(enteredText) => {
+                    this.setState({ wifiPort: enteredText })
+                  }}
+                />
+              </View>
+              <View style={styles.wifiFieldView}>
+                <Text style={styles.wifiFieldLabel}>Protocol</Text>
+                <TextInput
+                  style={styles.wifiField}
+                  value={this.state.wifiProtocol}
+                  onChangeText={(enteredText) => {
+                    this.setState({ wifiProtocol: enteredText })
+                  }}
+                />
+              </View>
+              <View style={styles.wifiFieldView}>
+                <Text style={styles.wifiFieldLabel}>Username</Text>
+                <TextInput
+                  style={styles.wifiField}
+                  value={this.state.wifiUsername}
+                  onChangeText={(enteredText) => {
+                    this.setState({ wifiUsername: enteredText })
+                  }}
+                />
+              </View>
+              <View style={styles.wifiFieldView}>
+                <Text style={styles.wifiFieldLabel}>Password</Text>
+                <TextInput
+                  style={styles.wifiField}
+                  value={this.state.wifiPassword}
+                  onChangeText={(enteredText) => {
+                    this.setState({ wifiPassword: enteredText })
+                  }}
+                />
+              </View>
             </View>
-
+            <MaterialButton
+              title='CHIUDI'              
+              onPress={() => {
+                this.setWifiModalVisible(!this.state.wifiModalVisible);
+              }}
+            />
           </Modal>
 
           <Modal
