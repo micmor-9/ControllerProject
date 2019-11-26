@@ -118,7 +118,11 @@ export default styles = StyleSheet.create({
       backgroundColor: '#eee',
       justifyContent: "space-between"
     },
-
+  
+    buttonContainer: {
+      marginVertical:10,
+    },
+                                          
     topBarButton: {
         marginLeft: 30
     },

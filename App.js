@@ -217,6 +217,15 @@ class ControllerProject extends Component {
   testButtonHandler() {
     this.write('(T1)');
   }
+  powerButtonHandler(){
+    this.write('(P1)');
+  }
+  resetButtonHandler(){
+    this.write('(R1)');
+  }
+  lightButtonHandler(){
+    this.write('(L1)');
+  }
 
   render() {
     return (
@@ -265,10 +274,22 @@ class ControllerProject extends Component {
               <View style={styles.box}><Text>Power: {this.state.power} </Text></View>
               <View style={styles.box}><Text>Angle: {this.state.angle} </Text></View>
             </View>
-            <View style={{ marginVertical: 10 }}>
-              <Button
-                title="Test"
+
+            <View style={styles.buttonContainer}>
+              <Button 
                 onPress={() => this.testButtonHandler}
+              />
+              <Button
+                title="Power"
+                onPress={() => this.powerButtonHandler}
+              />
+              <Button
+                title="Reset"
+                onPress= {() => this.resetButtonHandler}
+              />
+              <Button
+                title="Light"
+                onPress= {() => this.lightButtonHandler}
               />
             </View>
           </View>
