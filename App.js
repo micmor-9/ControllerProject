@@ -1,7 +1,7 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { Button, FlatList, Image, Platform, Linking, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Button, FlatList, Image, Platform, Linking, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad';
@@ -56,6 +56,8 @@ class ControllerProject extends Component {
       connected: false,
       section: 0,
       modalVisible: false,
+      wifiModalVisible: false,
+      wifiName: '',
       power: 0,
       angle: 0
     }
@@ -71,7 +73,7 @@ class ControllerProject extends Component {
         const [isEnabled, devices] = values
         this.setState({ isEnabled, devices }) //aggiorniamo variabili di stato
       })
-// Generiamo una notifica per l'utente
+    // Generiamo una notifica per l'utente
     BluetoothSerial.on('bluetoothEnabled', () => Toast.showShortBottom('Bluetooth attivato'))
     BluetoothSerial.on('bluetoothDisabled', () => Toast.showShortBottom('Bluetooth disattivato'))
     BluetoothSerial.on('error', (err) => console.log(`Error: ${err.message}`))
@@ -114,7 +116,7 @@ class ControllerProject extends Component {
     BluetoothSerial.disconnect()
       .then(() => this.setState({ connected: false }))
       .catch((err) => Toast.showShortBottom(err.message))
-  } 
+  }
   /**
    * Invia un messaggio al dispositivo
    * @param  {String} message
@@ -130,8 +132,8 @@ class ControllerProject extends Component {
       })
       .catch((err) => Toast.showShortBottom(err.message))
   }
-// Funzione che consente l'esecuzione asincrona di due o piu thread
-  writePackets (message, packetSize = 64) {
+  // Funzione che consente l'esecuzione asincrona di due o piu thread
+  writePackets(message, packetSize = 64) {
     const toWrite = iconv.encode(message, 'cp852')
     const writePromises = []
     const packetCount = Math.ceil(toWrite.length / packetSize)
@@ -144,8 +146,8 @@ class ControllerProject extends Component {
     }
 
     Promise.all(writePromises)
-    .then((result) => {
-    })
+      .then((result) => {
+      })
   }
   // Funzione che viene chiamata quando si seleziona un dispositivo dalla lista 
 
@@ -155,7 +157,7 @@ class ControllerProject extends Component {
       this.setModalVisible(false);
     }
   }
-//Funzione che aggiorna la lista dei dispositivi accoppiati 
+  //Funzione che aggiorna la lista dei dispositivi accoppiati 
   updateDevices() {
     BluetoothSerial.list()
       .then((values) => {
@@ -167,22 +169,33 @@ class ControllerProject extends Component {
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
-//Funzione che apre la schermata dei dispositivi associati
+
+  setWifiModalVisible(visible) {
+    this.setState({ wifiModalVisible: visible });
+  }
+
+  //Funzione che apre la schermata dei dispositivi associati
   openDevicesModal() {
     this.setModalVisible(!this.state.modalVisible);
   }
-//Implementazione del joystick
+
+  //Funzione che apre la schermata dei dati del display
+  openDisplayModal() {
+    this.setWifiModalVisible(!this.state.wifiModalVisible);
+  }
+
+  //Implementazione del joystick
   joystickHandler(x, y) {
     y = y * (-1);
     var r = Math.sqrt(x * x + y * y);
     var theta = Math.atan2(y, x);
     var tAngle = Math.round((theta * 180) / Math.PI);
     var tPower = Math.round(r * 100 / (Math.sqrt(2)));
-  
+
     if (tPower > 71) {
       tPower = 71;
     }
-  
+
     tPower = Math.round((tPower * 100) / 71);
     this.setState({ power: tPower });
     this.setState({ angle: tAngle });
@@ -206,7 +219,13 @@ class ControllerProject extends Component {
         <View style={styles.topBar}>
           <Text style={styles.heading}>Controller</Text>
           <View style={styles.enableInfoWrapper}>
-            <TouchableOpacity onPress={() => { this.openDevicesModal() }}>
+            <TouchableOpacity onPress={() => { this.openDisplayModal() }} style={styles.topBarButton}>
+              <Image
+                source={require('./images/baseline_airplay_white.png')}
+                style={styles.iconImage}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => { this.openDevicesModal() }} style={styles.topBarButton}>
               {this.state.connected ? (
                 <Image
                   source={require('./images/baseline_bluetooth_connected_white.png')}
@@ -222,7 +241,7 @@ class ControllerProject extends Component {
           </View>
         </View>
         <View style={{ marginTop: 22 }}>
-          
+
           <View style={styles.padContainer}>
             <View>
               <AxisPad
@@ -241,14 +260,27 @@ class ControllerProject extends Component {
               <View style={styles.box}><Text>Power: {this.state.power} </Text></View>
               <View style={styles.box}><Text>Angle: {this.state.angle} </Text></View>
             </View>
-            <View style={{marginVertical: 10}}>
-              <Button 
-                title="Test" 
+            <View style={{ marginVertical: 10 }}>
+              <Button
+                title="Test"
                 onPress={() => this.testButtonHandler}
               />
             </View>
           </View>
 
+          <Modal
+            animationType="slide"
+            visible={this.state.wifiModalVisible}
+            onRequestClose={() => {
+              this.setWifiModalVisible(false);
+            }}>
+
+            <View>
+              <Text>Nome</Text>
+              <TextInput value={this.state.wifiName}></TextInput>
+            </View>
+
+          </Modal>
 
           <Modal
             animationType="slide"
@@ -280,11 +312,11 @@ class ControllerProject extends Component {
                 title='DISPOSITIVO NON TROVATO?'
                 onPress={() => {
                   {
-                  Platform.OS === 'android' ? (
-                    AndroidOpenSettings.bluetoothSettings()
-                  ) : (
-                      Linking.openURL('prefs:root=General&path=Bluetooth')
-                    )
+                    Platform.OS === 'android' ? (
+                      AndroidOpenSettings.bluetoothSettings()
+                    ) : (
+                        Linking.openURL('prefs:root=General&path=Bluetooth')
+                      )
                   };
                 }}
               />

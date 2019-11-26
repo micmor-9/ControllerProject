@@ -117,5 +117,9 @@ export default styles = StyleSheet.create({
       fontSize: 10,
       backgroundColor: '#eee',
       justifyContent: "space-between"
+    },
+
+    topBarButton: {
+        marginLeft: 30
     }
   })
