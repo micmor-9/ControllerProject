@@ -121,5 +121,26 @@ export default styles = StyleSheet.create({
 
     topBarButton: {
         marginLeft: 30
+    },
+
+    wifiFieldLabel: {
+      flex: 1,
+      alignContent: "center",
+      textAlign: "center",
+      textAlignVertical: "center",
+      fontWeight: "bold",
+      borderWidth: 0.5,
+      backgroundColor: "#EEEEEE"
+    },
+
+    wifiField: {
+      flex: 2,
+      borderWidth: 0.5
+    },
+
+    wifiFieldView: {
+      flexDirection: "row"
     }
+
+
   })
