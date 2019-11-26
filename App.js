@@ -61,16 +61,16 @@ class ControllerProject extends Component {
   }
 
   componentDidMount() {
-    this.requestEnable();
+    this.requestEnable();  // richiede che sia abilitato il Bluetooth 
     Promise.all([
-      BluetoothSerial.isEnabled(),
-      BluetoothSerial.list()
+      BluetoothSerial.isEnabled(), // controlla se il Bluetooth è attivo
+      BluetoothSerial.list() // genera la lista dei dispositivi associati
     ])
       .then((values) => {
         const [isEnabled, devices] = values
-        this.setState({ isEnabled, devices })
+        this.setState({ isEnabled, devices }) //aggiorniamo variabili di stato
       })
-
+// Generiamo una notifica per l'utente
     BluetoothSerial.on('bluetoothEnabled', () => Toast.showShortBottom('Bluetooth attivato'))
     BluetoothSerial.on('bluetoothDisabled', () => Toast.showShortBottom('Bluetooth disattivato'))
     BluetoothSerial.on('error', (err) => console.log(`Error: ${err.message}`))
@@ -88,12 +88,12 @@ class ControllerProject extends Component {
    */
   requestEnable() {
     BluetoothSerial.requestEnable()
-      .then((res) => this.setState({ isEnabled: true }))
-      .catch((err) => Toast.showShortBottom(err.message))
+      .then((res) => this.setState({ isEnabled: true })) //richiesta Bluetooth andata a buon fine 
+      .catch((err) => Toast.showShortBottom(err.message)) //rileva eventuale errore
   }
 
   /**
-   * Connect to bluetooth device by id
+   *Funzione per la connessione al dispositivo Bluetooth
    * @param  {Object} device
    */
   connect(device) {
@@ -107,28 +107,15 @@ class ControllerProject extends Component {
   }
 
   /**
-   * Disconnect from bluetooth device
+   * Funzione per la disconnessione dal Bluetooth
    */
   disconnect() {
     BluetoothSerial.disconnect()
       .then(() => this.setState({ connected: false }))
       .catch((err) => Toast.showShortBottom(err.message))
-  }
-
+  } 
   /**
-   * Toggle connection when we have active device
-   * @param  {Boolean} value
-   */
-  toggleConnect(value) {
-    if (value === true && this.state.device) {
-      this.connect(this.state.device)
-    } else {
-      this.disconnect()
-    }
-  }
-
-  /**
-   * Write message to device
+   * Invia un messaggio al dispositivo
    * @param  {String} message
    */
   write(message) {
@@ -142,7 +129,7 @@ class ControllerProject extends Component {
       })
       .catch((err) => Toast.showShortBottom(err.message))
   }
-
+// Funzione che consente l'esecuzione asincrona di due o piu thread
   writePackets (message, packetSize = 64) {
     const toWrite = iconv.encode(message, 'cp852')
     const writePromises = []
@@ -159,6 +146,7 @@ class ControllerProject extends Component {
     .then((result) => {
     })
   }
+  // Funzione che viene chiamata quando si seleziona un dispositivo dalla lista 
 
   onDevicePress(device) {
     this.connect(device);
@@ -166,7 +154,7 @@ class ControllerProject extends Component {
       this.setModalVisible(false);
     }
   }
-
+//Funzione che aggiorna la lista dei dispositivi accoppiati 
   updateDevices() {
     BluetoothSerial.list()
       .then((values) => {
@@ -178,11 +166,11 @@ class ControllerProject extends Component {
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
-
+//Funzione che apre la schermata dei dispositivi associati
   openDevicesModal() {
     this.setModalVisible(!this.state.modalVisible);
   }
-
+//Implementazione del joystick
   joystickHandler(x, y) {
     y = y * (-1);
     var r = Math.sqrt(x * x + y * y);
