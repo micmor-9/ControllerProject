@@ -63,9 +63,7 @@ class ControllerProject extends Component {
       wifiPort: '',
       wifiProtocol: '',
       wifiUsername: '',
-      wifiPassword: '',
-      angle: 0,
-      power: 0
+      wifiPassword: ''
     }
   }
 
@@ -203,16 +201,16 @@ class ControllerProject extends Component {
     }
 
     tPower = Math.round((tPower * 100) / 71);
-    this.setState({ power: tPower, angle: tAngle });
-    if (this.state.connected) {
-      this.sendMovement();
-    }
+    //if (this.state.connected) {
+      this.sendMovement(tPower, tAngle);
+    //}
   }
 
-  sendMovement() {
-    var angleString = '(~' + this.state.angle.toString + ')';
-    var powerString = '(^' + this.state.power.toString + ')';
+  sendMovement(p,a) {
+    var angleString = '(~' + a.toString() + ')';
+    var powerString = '(^' + p.toString() + ')';
     var stringToSend = angleString + ':' + powerString;
+    console.log(stringToSend);
     this.writePackets(stringToSend);
   }
 
@@ -283,10 +281,10 @@ class ControllerProject extends Component {
               </AxisPad>
             </View>
 
-            <View style={styles.boxContainer}>
+            {/* <View style={styles.boxContainer}>
               <View style={styles.box}><Text>Power: {this.state.power} </Text></View>
               <View style={styles.box}><Text>Angle: {this.state.angle} </Text></View>
-            </View>
+            </View> */}
           </View>
 
           <View style={styles.buttonContainer}>
