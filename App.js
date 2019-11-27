@@ -1,7 +1,7 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { Button, FlatList, Image, Linking, Modal, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Button, FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
 import BluetoothSerial from 'react-native-bluetooth-serial'
@@ -256,6 +256,7 @@ class ControllerProject extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
+        <StatusBar backgroundColor="#00255d" barStyle="light-content" />
         <View style={styles.topBar}>
           <Text style={styles.heading}>Controller</Text>
           <View style={styles.enableInfoWrapper}>
