@@ -63,7 +63,11 @@ class ControllerProject extends Component {
       wifiPort: '',
       wifiProtocol: '',
       wifiUsername: '',
-      wifiPassword: ''
+      wifiPassword: '',
+      testStatus: 'off',
+      powerStatus: 'off',
+      resetStatus: 'off',
+      lightStatus: 'off'
     }
   }
 
@@ -153,8 +157,8 @@ class ControllerProject extends Component {
       .then((result) => {
       })
   }
-  // Funzione che viene chiamata quando si seleziona un dispositivo dalla lista 
 
+  // Funzione che viene chiamata quando si seleziona un dispositivo dalla lista 
   onDevicePress(device) {
     this.connect(device);
     if (this.state.modalVisible) {
@@ -202,11 +206,11 @@ class ControllerProject extends Component {
 
     tPower = Math.round((tPower * 100) / 71);
     //if (this.state.connected) {
-      this.sendMovement(tPower, tAngle);
+    this.sendMovement(tPower, tAngle);
     //}
   }
 
-  sendMovement(p,a) {
+  sendMovement(p, a) {
     var angleString = '(~' + a.toString() + ')';
     var powerString = '(^' + p.toString() + ')';
     var stringToSend = angleString + ':' + powerString;
@@ -215,26 +219,38 @@ class ControllerProject extends Component {
   }
 
   testButtonHandler() {
-    Toast.showShortBottom('Messaggio (T1) inviato al dispositivo. ');
+    Toast.showShortBottom('Eseguo test di connessione...');
     this.write('(T1)');
-
   }
 
   powerButtonHandler() {
-    Toast.showShortBottom('Messaggio (P1) inviato al dispositivo. ');
-    this.write('(P1)');
-
+    if (this.state.powerStatus === 'off') {
+      this.setState({ powerStatus: 'on' });
+      Toast.showShortBottom('DISPOSITIVO ACCESO');
+      this.write('(P1)');
+    } else {
+      this.setState({ powerStatus: 'off' });
+      Toast.showShortBottom('DISPOSITIVO SPENTO');
+      this.write('(P0)');
+    }
   }
 
   resetButtonHandler() {
-    Toast.showShortBottom('Messaggio (R1) inviato al dispositivo. ');
+    Toast.showShortBottom('Avvio reset...');
     this.write('(R1)');
-
   }
 
   lightButtonHandler() {
-    Toast.showShortBottom('Messaggio (L1) inviato al dispositivo. ');
-    this.write('(L1)');
+    if (this.state.lightStatus === 'off') {
+      this.setState({ lightStatus: 'on' });
+      Toast.showShortBottom('LUCE ACCESA');
+      this.write('(L1)');
+    } else {
+      this.setState({ lightStatus: 'off' });
+      Toast.showShortBottom('LUCE SPENTA');
+      this.write('(L0)');
+    }
+
   }
 
   render() {
@@ -290,7 +306,7 @@ class ControllerProject extends Component {
           <View style={styles.buttonContainer}>
             <View style={styles.actionButton}>
               <Button
-                title="Test"
+                title={"Test"}
                 onPress={() => this.testButtonHandler()}
               />
             </View>
@@ -298,7 +314,7 @@ class ControllerProject extends Component {
             <View style={styles.actionButton}>
               <Button
                 style={styles.actionButton}
-                title="Power"
+                title={"Power " + this.state.powerStatus}
                 onPress={() => this.powerButtonHandler()}
               />
             </View>
@@ -306,7 +322,7 @@ class ControllerProject extends Component {
             <View style={styles.actionButton}>
               <Button
                 style={styles.actionButton}
-                title="Reset"
+                title={"Reset"}
                 onPress={() => this.resetButtonHandler()}
               />
             </View>
@@ -314,7 +330,7 @@ class ControllerProject extends Component {
             <View style={styles.actionButton}>
               <Button
                 style={styles.actionButton}
-                title="Light"
+                title={"Light " + this.state.lightStatus}
                 onPress={() => this.lightButtonHandler()}
               />
             </View>
