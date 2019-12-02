@@ -152,5 +152,11 @@ export default styles = StyleSheet.create({
 
     wifiFieldView: {
       flexDirection: "row"
+    },
+
+    video: {
+      flex: 1,
+      maxHeight: "30%",
+      width: "100%"
     }
   })
