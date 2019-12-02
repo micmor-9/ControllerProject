@@ -6,6 +6,7 @@ import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import { LivePlayer } from "react-native-live-stream"
+import AsyncStorage from '@react-native-community/async-storage';
 import styles from './styles.js'
 
 
@@ -365,12 +366,14 @@ class ControllerProject extends Component {
 
           <Modal
             animationType="slide"
-            visible={this.state.wifiModalVisible}
+            visible={this.state.wifiModalVisible} 
+            transparent={true}           
             onRequestClose={() => {
               this.setWifiModalVisible(false);
             }}>
 
-            <View>
+            <View style={styles.wifiModal}>
+              <Text style={styles.modalHead}>Impostazioni streaming</Text>
               <View style={styles.wifiFieldView}>
                 <Text style={styles.wifiFieldLabel}>Nome</Text>
                 <TextInput
