@@ -155,7 +155,7 @@ export default styles = StyleSheet.create({
 
   wifiModal: {
     backgroundColor: "rgba(22, 59, 138, 0.95)",
-    height: "95%",
+    height: "100%",
     padding: 20
   },
 

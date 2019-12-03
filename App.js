@@ -127,6 +127,7 @@ class ControllerProject extends Component {
     BluetoothSerial.disconnect()
       .then(() => this.setState({ connected: false }))
       .catch((err) => Toast.showShortBottom(err.message))
+    this.updateDevices();
   }
   /**
    * Invia un messaggio al dispositivo
@@ -144,7 +145,7 @@ class ControllerProject extends Component {
     }
   }
   // Funzione che consente l'esecuzione asincrona di due o piu thread
-  writePackets(message, packetSize = 64) {
+  writePackets(message, packetSize = 8) {
     const toWrite = iconv.encode(message, 'cp852')
     const writePromises = []
     const packetCount = Math.ceil(toWrite.length / packetSize)
@@ -218,7 +219,8 @@ class ControllerProject extends Component {
     var powerString = '(^' + p.toString() + ')';
     var stringToSend = angleString + ':' + powerString;
     console.log(stringToSend);
-    this.writePackets(stringToSend);
+    this.write(stringToSend);
+    
   }
 
   testButtonHandler() {
@@ -431,13 +433,17 @@ class ControllerProject extends Component {
                 }}
               />
             </View>
+            <View style={styles.wifiFieldView}>
+              <MaterialButton
+                title='CHIUDI'
+                onPress={() => {
+                  this.setWifiModalVisible(!this.state.wifiModalVisible);
+                }}
+              />
+            </View>
+
           </View>
-          <MaterialButton
-            title='CHIUDI'
-            onPress={() => {
-              this.setWifiModalVisible(!this.state.wifiModalVisible);
-            }}
-          />
+
         </Modal>
 
         <Modal
