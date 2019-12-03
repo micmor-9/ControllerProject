@@ -221,7 +221,7 @@ class ControllerProject extends Component {
     var stringToSend = angleString + ':' + powerString;
     console.log(stringToSend);
     this.write(stringToSend);
-    
+
   }
 
   testButtonHandler() {
@@ -312,99 +312,58 @@ class ControllerProject extends Component {
         />
 
 
-          <View style={styles.padContainer}>
-            
-              <AxisPad
-                size={220}
-                handlerSize={80}
-                step={1 / 360}
-                resetOnRelease={true}
-                autoCenter={false}
-                onValue={({ x, y }) => {
-                  this.joystickHandler(x, y);
-                }}
-              >
-              </AxisPad>
-               
-           </View>
-           <View style={styles.actionButton}>
-              
-                <Icon
-                  name='power-settings-new' 
-                  type='material'
-                  color='red'
-                  raised={true}
-                  reverse={true}
-                  onPress={() => this.powerButtonHandler()}
-                />
-                <Icon
-                  name='highlight'
-                  type='material'
-                  color='green'
-                  raised={true}
-                  reverse={true}
-                  onPress={() => this.lightButtonHandler()}
-                />
-                <Icon
-                  name='report'
-                  type='material'
-                  color='blue'
-                  raised={true}
-                  reverse={true}
-                  onPress={() => this.testButtonHandler()}
-                />
-                <Icon
-                  name='refresh'
-                  type='material'
-                  color='#ECD118'
-                  raised={true}
-                  reverse={true}
-                  onPress={() => this.resetButtonHandler()}
-                />
+        <View style={styles.padContainer}>
+
+          <AxisPad
+            size={220}
+            handlerSize={80}
+            step={1 / 360}
+            resetOnRelease={true}
+            autoCenter={false}
+            onValue={({ x, y }) => {
+              this.joystickHandler(x, y);
+            }}
+          >
+          </AxisPad>
+
+        </View>
+        <View style={styles.actionButton}>
+
+          <Icon
+            name='power-settings-new'
+            type='material'
+            color='red'
+            raised={true}
+            reverse={true}
+            onPress={() => this.powerButtonHandler()}
+          />
+          <Icon
+            name='highlight'
+            type='material'
+            color='green'
+            raised={true}
+            reverse={true}
+            onPress={() => this.lightButtonHandler()}
+          />
+          <Icon
+            name='report'
+            type='material'
+            color='blue'
+            raised={true}
+            reverse={true}
+            onPress={() => this.testButtonHandler()}
+          />
+          <Icon
+            name='refresh'
+            type='material'
+            color='#ECD118'
+            raised={true}
+            reverse={true}
+            onPress={() => this.resetButtonHandler()}
+          />
         </View>
 
         <Modal
-          animationType="slide"
-          visible={this.state.wifiModalVisible}
-          transparent={true}
-          onRequestClose={() => {
-            this.setWifiModalVisible(false);
-          }}>
-
-          <View style={styles.wifiModal}>
-            <Text style={styles.modalHead}>Impostazioni streaming</Text>
-            <View style={styles.wifiFieldView}>
-              <Text style={styles.wifiFieldLabel}>Nome</Text>
-              <TextInput
-                style={styles.wifiField}
-                value={this.state.wifiName}
-                onChangeText={(enteredText) => {
-                  this.setState({ wifiName: enteredText })
-                }}
-              />
-            </View>
-            <View style={styles.wifiFieldView}>
-              <Text style={styles.wifiFieldLabel}>IP</Text>
-              <TextInput
-                style={styles.wifiField}
-                value={this.state.wifiIp}
-                onChangeText={(enteredText) => {
-                  this.setState({ wifiIp: enteredText })
-                }}
-              />
-            </View>
-            <View style={styles.wifiFieldView}>
-              <Text style={styles.wifiFieldLabel}>Port</Text>
-              <TextInput
-                style={styles.wifiField}
-                value={this.state.wifiPort}
-                onChangeText={(enteredText) => {
-                  this.setState({ wifiPort: enteredText })
-                }}
-              />
-            </View>
-
-          <Modal
           animationType="slide"
           visible={this.state.wifiModalVisible}
           transparent={true}
@@ -526,7 +485,6 @@ class ControllerProject extends Component {
             />
           </View>
         </Modal>
-
       </View>
     )
   }

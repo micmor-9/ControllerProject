@@ -19,9 +19,8 @@
     "react-native-bluetooth-serial": "^1.0.0-rc1",
     "react-native-elements": "^1.2.7",
     "react-native-system-setting": "^1.7.3",
-    "react-native-vector-icons": "^6.6.0"
-    "react-native-live-stream": "^1.0.1",
-    "react-native-system-setting": "^1.7.3"
+    "react-native-vector-icons": "^6.6.0",
+    "react-native-live-stream": "^1.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
