@@ -1,7 +1,7 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { Button, FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
 import BluetoothSerial from 'react-native-bluetooth-serial'
@@ -146,7 +146,7 @@ class ControllerProject extends Component {
     }
   }
   // Funzione che consente l'esecuzione asincrona di due o piu thread
-  writePackets(message, packetSize = 8) {
+  writePackets(message, packetSize = 64) {
     const toWrite = iconv.encode(message, 'cp852')
     const writePromises = []
     const packetCount = Math.ceil(toWrite.length / packetSize)
@@ -210,9 +210,9 @@ class ControllerProject extends Component {
     }
 
     tPower = Math.round((tPower * 100) / 71);
-    //if (this.state.connected) {
-    this.sendMovement(tPower, tAngle);
-    //}
+    if (this.state.connected) {
+      this.sendMovement(tPower, tAngle);
+    }
   }
 
   sendMovement(p, a) {
@@ -220,8 +220,7 @@ class ControllerProject extends Component {
     var powerString = '(^' + p.toString() + ')';
     var stringToSend = angleString + ':' + powerString;
     console.log(stringToSend);
-    this.write(stringToSend);
-
+    this.writePackets(stringToSend, stringToSend.length);
   }
 
   testButtonHandler() {
@@ -242,9 +241,12 @@ class ControllerProject extends Component {
   }
 
   resetButtonHandler() {
-    this.setState({ videoStatus: !this.state.videoStatus });
     Toast.showShortBottom('Avvio reset...');
     this.write('(R1)');
+  }
+
+  playVideo() {
+    this.setState({ videoStatus: !this.state.videoStatus });
   }
 
   lightButtonHandler() {
@@ -267,6 +269,19 @@ class ControllerProject extends Component {
         <View style={styles.topBar}>
           <Text style={styles.heading}>Controller</Text>
           <View style={styles.enableInfoWrapper}>
+            <TouchableOpacity onPress={() => { this.playVideo() }} style={styles.topBarButton}>
+              {this.state.videoStatus ? (
+                <Image
+                  source={require('./images/baseline_play_arrow_white.png')}
+                  style={styles.iconImage}
+                />
+              ) : (
+                  <Image
+                    source={require('./images/baseline_pause_white.png')}
+                    style={styles.iconImage}
+                  />
+                )}
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => { this.openDisplayModal() }} style={styles.topBarButton}>
               <Image
                 source={require('./images/baseline_airplay_white.png')}
