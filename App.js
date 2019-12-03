@@ -5,6 +5,8 @@ import { Button, FlatList, Image, Linking, Modal, Platform, StatusBar, Text, Tex
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
 import BluetoothSerial from 'react-native-bluetooth-serial'
+import { LivePlayer } from "react-native-live-stream"
+import AsyncStorage from '@react-native-community/async-storage';
 import styles from './styles.js'
 import { Icon } from 'react-native-elements'
 
@@ -68,7 +70,8 @@ class ControllerProject extends Component {
       testStatus: 'off',
       powerStatus: 'off',
       resetStatus: 'off',
-      lightStatus: 'off'
+      lightStatus: 'off',
+      videoStatus: true
     }
   }
 
@@ -125,6 +128,7 @@ class ControllerProject extends Component {
     BluetoothSerial.disconnect()
       .then(() => this.setState({ connected: false }))
       .catch((err) => Toast.showShortBottom(err.message))
+    this.updateDevices();
   }
   /**
    * Invia un messaggio al dispositivo
@@ -142,7 +146,7 @@ class ControllerProject extends Component {
     }
   }
   // Funzione che consente l'esecuzione asincrona di due o piu thread
-  writePackets(message, packetSize = 64) {
+  writePackets(message, packetSize = 8) {
     const toWrite = iconv.encode(message, 'cp852')
     const writePromises = []
     const packetCount = Math.ceil(toWrite.length / packetSize)
@@ -216,7 +220,8 @@ class ControllerProject extends Component {
     var powerString = '(^' + p.toString() + ')';
     var stringToSend = angleString + ':' + powerString;
     console.log(stringToSend);
-    this.writePackets(stringToSend);
+    this.write(stringToSend);
+    
   }
 
   testButtonHandler() {
@@ -237,6 +242,7 @@ class ControllerProject extends Component {
   }
 
   resetButtonHandler() {
+    this.setState({ videoStatus: !this.state.videoStatus });
     Toast.showShortBottom('Avvio reset...');
     this.write('(R1)');
   }
@@ -256,7 +262,7 @@ class ControllerProject extends Component {
 
   render() {
     return (
-      <View style={{ flex: 10 }}>
+      <View style={{ flex: 1 }}>
         <StatusBar backgroundColor="#00255d" barStyle="light-content" />
         <View style={styles.topBar}>
           <Text style={styles.heading}>Controller</Text>
@@ -282,10 +288,29 @@ class ControllerProject extends Component {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.monitor}> 
-        </View>
-        
-        
+
+        <LivePlayer
+          source={{ uri: "rtmp://fms.105.net/live/rmc1" }}
+          ref={(ref) => {
+            this.player = ref
+          }}
+          style={styles.video}
+          paused={this.state.videoStatus}
+          muted={false}
+          bufferTime={300}
+          maxBufferTime={1000}
+          resizeMode={"cover"}
+          onLoading={() => {
+
+          }}
+          onLoad={() => {
+            Toast.showShortBottom('Video caricato');
+          }}
+          onEnd={() => {
+
+          }}
+        />
+
 
           <View style={styles.padContainer}>
             
@@ -301,8 +326,8 @@ class ControllerProject extends Component {
               >
               </AxisPad>
                
-               </View>
-               <View style={styles.actionButton}>
+           </View>
+           <View style={styles.actionButton}>
               
                 <Icon
                   name='power-settings-new' 
@@ -311,7 +336,7 @@ class ControllerProject extends Component {
                   raised={true}
                   reverse={true}
                   onPress={() => this.powerButtonHandler()}
-              />
+                />
                 <Icon
                   name='highlight'
                   type='material'
@@ -319,15 +344,15 @@ class ControllerProject extends Component {
                   raised={true}
                   reverse={true}
                   onPress={() => this.lightButtonHandler()}
-              />
-               <Icon
+                />
+                <Icon
                   name='report'
                   type='material'
                   color='blue'
                   raised={true}
                   reverse={true}
                   onPress={() => this.testButtonHandler()}
-              />
+                />
                 <Icon
                   name='refresh'
                   type='material'
@@ -335,133 +360,173 @@ class ControllerProject extends Component {
                   raised={true}
                   reverse={true}
                   onPress={() => this.resetButtonHandler()}
+                />
+        </View>
+
+        <Modal
+          animationType="slide"
+          visible={this.state.wifiModalVisible}
+          transparent={true}
+          onRequestClose={() => {
+            this.setWifiModalVisible(false);
+          }}>
+
+          <View style={styles.wifiModal}>
+            <Text style={styles.modalHead}>Impostazioni streaming</Text>
+            <View style={styles.wifiFieldView}>
+              <Text style={styles.wifiFieldLabel}>Nome</Text>
+              <TextInput
+                style={styles.wifiField}
+                value={this.state.wifiName}
+                onChangeText={(enteredText) => {
+                  this.setState({ wifiName: enteredText })
+                }}
               />
-             </View>
-
-          <View style={styles.buttonContainer}>
-            <View style={styles.actionButton}>
-              
             </View>
+            <View style={styles.wifiFieldView}>
+              <Text style={styles.wifiFieldLabel}>IP</Text>
+              <TextInput
+                style={styles.wifiField}
+                value={this.state.wifiIp}
+                onChangeText={(enteredText) => {
+                  this.setState({ wifiIp: enteredText })
+                }}
+              />
+            </View>
+            <View style={styles.wifiFieldView}>
+              <Text style={styles.wifiFieldLabel}>Port</Text>
+              <TextInput
+                style={styles.wifiField}
+                value={this.state.wifiPort}
+                onChangeText={(enteredText) => {
+                  this.setState({ wifiPort: enteredText })
+                }}
+              />
             </View>
 
           <Modal
-            animationType="slide"
-            visible={this.state.wifiModalVisible}
-            onRequestClose={() => {
-              this.setWifiModalVisible(false);
-            }}>
+          animationType="slide"
+          visible={this.state.wifiModalVisible}
+          transparent={true}
+          onRequestClose={() => {
+            this.setWifiModalVisible(false);
+          }}>
 
-            <View>
-              <View style={styles.wifiFieldView}>
-                <Text style={styles.wifiFieldLabel}>Nome</Text>
-                <TextInput
-                  style={styles.wifiField}
-                  value={this.state.wifiName}
-                  onChangeText={(enteredText) => {
-                    this.setState({ wifiName: enteredText })
-                  }}
-                />
-              </View>
-              <View style={styles.wifiFieldView}>
-                <Text style={styles.wifiFieldLabel}>IP</Text>
-                <TextInput
-                  style={styles.wifiField}
-                  value={this.state.wifiIp}
-                  onChangeText={(enteredText) => {
-                    this.setState({ wifiIp: enteredText })
-                  }}
-                />
-              </View>
-              <View style={styles.wifiFieldView}>
-                <Text style={styles.wifiFieldLabel}>Port</Text>
-                <TextInput
-                  style={styles.wifiField}
-                  value={this.state.wifiPort}
-                  onChangeText={(enteredText) => {
-                    this.setState({ wifiPort: enteredText })
-                  }}
-                />
-              </View>
-              <View style={styles.wifiFieldView}>
-                <Text style={styles.wifiFieldLabel}>Protocol</Text>
-                <TextInput
-                  style={styles.wifiField}
-                  value={this.state.wifiProtocol}
-                  onChangeText={(enteredText) => {
-                    this.setState({ wifiProtocol: enteredText })
-                  }}
-                />
-              </View>
-              <View style={styles.wifiFieldView}>
-                <Text style={styles.wifiFieldLabel}>Username</Text>
-                <TextInput
-                  style={styles.wifiField}
-                  value={this.state.wifiUsername}
-                  onChangeText={(enteredText) => {
-                    this.setState({ wifiUsername: enteredText })
-                  }}
-                />
-              </View>
-              <View style={styles.wifiFieldView}>
-                <Text style={styles.wifiFieldLabel}>Password</Text>
-                <TextInput
-                  style={styles.wifiField}
-                  value={this.state.wifiPassword}
-                  onChangeText={(enteredText) => {
-                    this.setState({ wifiPassword: enteredText })
-                  }}
-                />
-              </View>
+          <View style={styles.wifiModal}>
+            <Text style={styles.modalHead}>Impostazioni streaming</Text>
+            <View style={styles.wifiFieldView}>
+              <Text style={styles.wifiFieldLabel}>Nome</Text>
+              <TextInput
+                style={styles.wifiField}
+                value={this.state.wifiName}
+                onChangeText={(enteredText) => {
+                  this.setState({ wifiName: enteredText })
+                }}
+              />
             </View>
-            <MaterialButton
-              title='CHIUDI'
-              onPress={() => {
-                this.setWifiModalVisible(!this.state.wifiModalVisible);
-              }}
-            />
-          </Modal>
-
-          <Modal
-            animationType="slide"
-            visible={this.state.modalVisible}
-            onRequestClose={() => {
-              this.setModalVisible(false);
-            }}>
-            <View>
-              {this.state.isEnabled ? (
-                <DeviceList
-                  showConnectedIcon={this.state.section === 0}
-                  connectedId={this.state.device && this.state.device.id}
-                  devices={this.state.devices}
-                  onDevicePress={(device) => this.onDevicePress(device)}
-                />
-              ) : null
-              }
+            <View style={styles.wifiFieldView}>
+              <Text style={styles.wifiFieldLabel}>IP</Text>
+              <TextInput
+                style={styles.wifiField}
+                value={this.state.wifiIp}
+                onChangeText={(enteredText) => {
+                  this.setState({ wifiIp: enteredText })
+                }}
+              />
+            </View>
+            <View style={styles.wifiFieldView}>
+              <Text style={styles.wifiFieldLabel}>Port</Text>
+              <TextInput
+                style={styles.wifiField}
+                value={this.state.wifiPort}
+                onChangeText={(enteredText) => {
+                  this.setState({ wifiPort: enteredText })
+                }}
+              />
+            </View>
+            <View style={styles.wifiFieldView}>
+              <Text style={styles.wifiFieldLabel}>Protocol</Text>
+              <TextInput
+                style={styles.wifiField}
+                value={this.state.wifiProtocol}
+                onChangeText={(enteredText) => {
+                  this.setState({ wifiProtocol: enteredText })
+                }}
+              />
+            </View>
+            <View style={styles.wifiFieldView}>
+              <Text style={styles.wifiFieldLabel}>Username</Text>
+              <TextInput
+                style={styles.wifiField}
+                value={this.state.wifiUsername}
+                onChangeText={(enteredText) => {
+                  this.setState({ wifiUsername: enteredText })
+                }}
+              />
+            </View>
+            <View style={styles.wifiFieldView}>
+              <Text style={styles.wifiFieldLabel}>Password</Text>
+              <TextInput
+                style={styles.wifiField}
+                value={this.state.wifiPassword}
+                onChangeText={(enteredText) => {
+                  this.setState({ wifiPassword: enteredText })
+                }}
+              />
+            </View>
+            <View style={styles.wifiFieldView}>
               <MaterialButton
                 title='CHIUDI'
                 onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}
-              />
-              <MaterialButton
-                title='AGGIORNA'
-                onPress={() => this.updateDevices()}
-              />
-              <MaterialButton
-                title='DISPOSITIVO NON TROVATO?'
-                onPress={() => {
-                  {
-                    Platform.OS === 'android' ? (
-                      AndroidOpenSettings.bluetoothSettings()
-                    ) : (
-                        Linking.openURL('prefs:root=General&path=Bluetooth')
-                      )
-                  };
+                  this.setWifiModalVisible(!this.state.wifiModalVisible);
                 }}
               />
             </View>
-          </Modal>
-        
+
+          </View>
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            this.setModalVisible(false);
+          }}>
+          <View>
+            {this.state.isEnabled ? (
+              <DeviceList
+                showConnectedIcon={this.state.section === 0}
+                connectedId={this.state.device && this.state.device.id}
+                devices={this.state.devices}
+                onDevicePress={(device) => this.onDevicePress(device)}
+              />
+            ) : null
+            }
+            <MaterialButton
+              title='CHIUDI'
+              onPress={() => {
+                this.setModalVisible(!this.state.modalVisible);
+              }}
+            />
+            <MaterialButton
+              title='AGGIORNA'
+              onPress={() => this.updateDevices()}
+            />
+            <MaterialButton
+              title='DISPOSITIVO NON TROVATO?'
+              onPress={() => {
+                {
+                  Platform.OS === 'android' ? (
+                    AndroidOpenSettings.bluetoothSettings()
+                  ) : (
+                      Linking.openURL('prefs:root=General&path=Bluetooth')
+                    )
+                };
+              }}
+            />
+          </View>
+        </Modal>
+
       </View>
     )
   }

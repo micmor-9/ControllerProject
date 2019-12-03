@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.6.3",
     "@remobile/react-native-toast": "^1.0.7",
     "react": "16.9.0",
     "react-native": "0.61.5",
@@ -19,6 +20,8 @@
     "react-native-elements": "^1.2.7",
     "react-native-system-setting": "^1.7.3",
     "react-native-vector-icons": "^6.6.0"
+    "react-native-live-stream": "^1.0.1",
+    "react-native-system-setting": "^1.7.3"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
