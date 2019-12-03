@@ -1,20 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 export default styles = StyleSheet.create({
-  principale: {
-    marginTop: 22,
-    backgroundColor: "red",
-  },
-  monitor: {
-    backgroundColor: "black",
-    flex: 0.5,
-    width: 500,
-    height: 40,
-  },
-  basso: {
-    flex: 1,
-    flexDirection: 'column-reverse',
-  },
   container: {
     flex: 0.9,
     backgroundColor: '#F5FCFF'

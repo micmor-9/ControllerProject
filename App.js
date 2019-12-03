@@ -62,7 +62,7 @@ class ControllerProject extends Component {
       modalVisible: false,
       wifiModalVisible: false,
       wifiName: '',
-      wifiIp: '',
+      wifiIp: 'rtmp://fms.105.net/live/rmc1',
       wifiPort: '',
       wifiProtocol: '',
       wifiUsername: '',
@@ -130,6 +130,7 @@ class ControllerProject extends Component {
       .catch((err) => Toast.showShortBottom(err.message))
     this.updateDevices();
   }
+
   /**
    * Invia un messaggio al dispositivo
    * @param  {String} message
@@ -145,6 +146,7 @@ class ControllerProject extends Component {
         .catch((err) => Toast.showShortBottom(err.message))
     }
   }
+
   // Funzione che consente l'esecuzione asincrona di due o piu thread
   writePackets(message, packetSize = 64) {
     const toWrite = iconv.encode(message, 'cp852')
@@ -170,6 +172,7 @@ class ControllerProject extends Component {
       this.setModalVisible(false);
     }
   }
+
   //Funzione che aggiorna la lista dei dispositivi accoppiati 
   updateDevices() {
     BluetoothSerial.list()
@@ -194,6 +197,7 @@ class ControllerProject extends Component {
 
   //Funzione che apre la schermata dei dati del display
   openDisplayModal() {
+    this.playVideo(true);
     this.setWifiModalVisible(!this.state.wifiModalVisible);
   }
 
@@ -215,6 +219,7 @@ class ControllerProject extends Component {
     }
   }
 
+  //Funzione che invia al dispositivo Bluetooth le coordinate per il movimento
   sendMovement(p, a) {
     var angleString = '(~' + a.toString() + ')';
     var powerString = '(^' + p.toString() + ')';
@@ -223,11 +228,13 @@ class ControllerProject extends Component {
     this.writePackets(stringToSend, stringToSend.length);
   }
 
+  //Funzione pulsante test
   testButtonHandler() {
     Toast.showShortBottom('Eseguo test di connessione...');
     this.write('(T1)');
   }
 
+  //Funzione pulsante power
   powerButtonHandler() {
     if (this.state.powerStatus === 'off') {
       this.setState({ powerStatus: 'on' });
@@ -240,15 +247,23 @@ class ControllerProject extends Component {
     }
   }
 
+  //Funzione pulsante reset
   resetButtonHandler() {
     Toast.showShortBottom('Avvio reset...');
     this.write('(R1)');
   }
 
-  playVideo() {
-    this.setState({ videoStatus: !this.state.videoStatus });
+  //Funzione pulsante play
+  playVideo(status = 'no') {
+    if(status === 'no') {
+      this.setState({ videoStatus: !this.state.videoStatus });
+    } else {
+      this.setState({ videoStatus: status });
+    }
+    
   }
 
+  //Funzione pulsante light
   lightButtonHandler() {
     if (this.state.lightStatus === 'off') {
       this.setState({ lightStatus: 'on' });
@@ -262,6 +277,7 @@ class ControllerProject extends Component {
 
   }
 
+  //Funzione principale che realizza l'interfaccia grafica
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -305,7 +321,7 @@ class ControllerProject extends Component {
         </View>
 
         <LivePlayer
-          source={{ uri: "rtmp://fms.105.net/live/rmc1" }}
+          source={{ uri: this.state.wifiIp }}
           ref={(ref) => {
             this.player = ref
           }}
@@ -455,7 +471,7 @@ class ControllerProject extends Component {
               <Icon
                 name='close'
                 type='material'
-                color='blue'
+                color='#00255d'
                 size={28}
                 raised={true}
                 reverse={false}
