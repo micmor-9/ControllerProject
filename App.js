@@ -451,12 +451,15 @@ class ControllerProject extends Component {
                 }}
               />
             </View>
-            <View style={styles.wifiFieldView}>
-              <MaterialButton
-                title='CHIUDI'
-                onPress={() => {
-                  this.setWifiModalVisible(!this.state.wifiModalVisible);
-                }}
+            <View style={styles.modalButton}>
+              <Icon
+                name='close'
+                type='material'
+                color='blue'
+                size={28}
+                raised={true}
+                reverse={false}
+                onPress={() => this.setWifiModalVisible(!this.state.wifiModalVisible)}
               />
             </View>
 

@@ -151,13 +151,18 @@ export default styles = StyleSheet.create({
   wifiModal: {
     backgroundColor: "rgba(22, 59, 138, 0.95)",
     height: "100%",
-    padding: 20
+    padding: 20,
   },
 
   modalHead: {
     fontSize: 30,
     color: "#FFF",
     paddingBottom: 20
+  },
+
+  modalButton: {
+    alignItems: "center",
+    marginTop: 100
   },
 
   wifiFieldLabel: {
