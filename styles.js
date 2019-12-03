@@ -7,7 +7,7 @@ export default styles = StyleSheet.create({
   },
   monitor: {
     backgroundColor:"black",
-    flex: 0.5,
+    flex: 1,
     width: 500,
     height: 40,
   },
@@ -119,10 +119,11 @@ export default styles = StyleSheet.create({
   
     // Joystick styles
     padContainer: {
-      backgroundColor: '#fff',
+      marginTop:70,
       flex: 1, 
-      flexDirection: 'row',
+      width: '100%',
       alignContent: "center",
+      alignItems:'center',
       
     },
     boxContainer: {
@@ -142,10 +143,9 @@ export default styles = StyleSheet.create({
     },
 
     actionButton: {
-      flexDirection: 'column',
-     flex:1,
-      marginHorizontal: 10,
-      
+      flexDirection: 'row',
+      marginBottom:20,
+      marginHorizontal: 50, 
       justifyContent: "space-between"
     },
                                           

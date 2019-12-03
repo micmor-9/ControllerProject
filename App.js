@@ -6,6 +6,7 @@ import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import styles from './styles.js'
+import { Icon } from 'react-native-elements'
 
 
 global.Buffer = Buffer
@@ -284,13 +285,13 @@ class ControllerProject extends Component {
         <View style={styles.monitor}> 
         </View>
         
-        <View style={styles.basso}>
+        
 
           <View style={styles.padContainer}>
             
               <AxisPad
-                size={150}
-                handlerSize={50}
+                size={220}
+                handlerSize={80}
                 step={1 / 360}
                 resetOnRelease={true}
                 autoCenter={false}
@@ -299,50 +300,49 @@ class ControllerProject extends Component {
                 }}
               >
               </AxisPad>
+               
+               </View>
+               <View style={styles.actionButton}>
               
-              <View style={styles.actionButton}>
-              <View>
-              <Button
-                style={styles.actionButton}
-                title={"Power " + this.state.powerStatus}
-                onPress={() => this.powerButtonHandler()}
+                <Icon
+                  name='power-settings-new' 
+                  type='material'
+                  color='red'
+                  raised={true}
+                  reverse={true}
+                  onPress={() => this.powerButtonHandler()}
               />
-              <Button
-                style={styles.actionButton}
-                title={"Light " + this.state.lightStatus}
-                onPress={() => this.lightButtonHandler()}
+                <Icon
+                  name='highlight'
+                  type='material'
+                  color='green'
+                  raised={true}
+                  reverse={true}
+                  onPress={() => this.lightButtonHandler()}
               />
-            
-            </View>
-            </View>
-            </View>
-
-            {/* <View style={styles.boxContainer}>
-              <View style={styles.box}><Text>Power: {this.state.power} </Text></View>
-              <View style={styles.box}><Text>Angle: {this.state.angle} </Text></View>
-            </View> */}
-          </View>
+               <Icon
+                  name='report'
+                  type='material'
+                  color='blue'
+                  raised={true}
+                  reverse={true}
+                  onPress={() => this.testButtonHandler()}
+              />
+                <Icon
+                  name='refresh'
+                  type='material'
+                  color='#ECD118'
+                  raised={true}
+                  reverse={true}
+                  onPress={() => this.resetButtonHandler()}
+              />
+             </View>
 
           <View style={styles.buttonContainer}>
             <View style={styles.actionButton}>
-              <Button
-                title={"Test"}
-                onPress={() => this.testButtonHandler()}
-              />
-              <Button
-                style={styles.actionButton}
-                title={"Reset"}
-                onPress={() => this.resetButtonHandler()}
-              />
-            </View>
-            </View>
-
-            
-
-
               
-            
-          
+            </View>
+            </View>
 
           <Modal
             animationType="slide"
