@@ -311,10 +311,10 @@ class ControllerProject extends Component {
         <View>
 
           <View style={styles.padContainer}>
-            <View>
+            
               <AxisPad
-                size={200}
-                handlerSize={75}
+                size={150}
+                handlerSize={50}
                 step={1 / 360}
                 resetOnRelease={true}
                 autoCenter={false}
@@ -323,6 +323,22 @@ class ControllerProject extends Component {
                 }}
               >
               </AxisPad>
+              
+              <View style={styles.actionButton}>
+              <View>
+              <Button
+                style={styles.actionButton}
+                title={"Power " + this.state.powerStatus}
+                onPress={() => this.powerButtonHandler()}
+              />
+              <Button
+                style={styles.actionButton}
+                title={"Light " + this.state.lightStatus}
+                onPress={() => this.lightButtonHandler()}
+              />
+            
+            </View>
+            </View>
             </View>
 
             {/* <View style={styles.boxContainer}>
@@ -337,32 +353,20 @@ class ControllerProject extends Component {
                 title={"Test"}
                 onPress={() => this.testButtonHandler()}
               />
-            </View>
-
-            <View style={styles.actionButton}>
-              <Button
-                style={styles.actionButton}
-                title={"Power " + this.state.powerStatus}
-                onPress={() => this.powerButtonHandler()}
-              />
-            </View>
-
-            <View style={styles.actionButton}>
               <Button
                 style={styles.actionButton}
                 title={"Reset"}
                 onPress={() => this.resetButtonHandler()}
               />
             </View>
-
-            <View style={styles.actionButton}>
-              <Button
-                style={styles.actionButton}
-                title={"Light " + this.state.lightStatus}
-                onPress={() => this.lightButtonHandler()}
-              />
             </View>
-          </View>
+
+            
+
+
+              
+            
+          
 
           <Modal
             animationType="slide"
@@ -483,7 +487,7 @@ class ControllerProject extends Component {
               />
             </View>
           </Modal>
-        </View>
+        
       </View>
     )
   }
