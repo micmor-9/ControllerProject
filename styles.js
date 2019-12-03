@@ -119,34 +119,29 @@ export default styles = StyleSheet.create({
 
   // Joystick styles
   padContainer: {
-    backgroundColor: '#fff',
-    flex: 1,
-    flexDirection: 'row',
     alignContent: "center",
-
+    alignItems: "center",
+    height: "30%",
+    marginVertical: 30
   },
+  
   boxContainer: {
     flexDirection: 'row'
   },
-  box: {
-    width: '50%',
-    fontSize: 10,
-    backgroundColor: '#eee',
-    justifyContent: "space-between"
-  },
 
   buttonContainer: {
-
     marginVertical: 10,
     flexDirection: "row"
   },
 
   actionButton: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     flex: 1,
-    marginHorizontal: 10,
-
-    justifyContent: "space-between"
+    marginHorizontal: 30,
+    justifyContent: "space-between",
+    alignContent: "center",
+    alignItems: "center",
+    maxHeight: "10%"
   },
 
   topBarButton: {

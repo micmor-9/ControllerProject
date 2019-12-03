@@ -328,11 +328,11 @@ class ControllerProject extends Component {
 
         </View>
         <View style={styles.actionButton}>
-
           <Icon
             name='power-settings-new'
             type='material'
             color='red'
+            size={28}
             raised={true}
             reverse={true}
             onPress={() => this.powerButtonHandler()}
@@ -340,7 +340,8 @@ class ControllerProject extends Component {
           <Icon
             name='highlight'
             type='material'
-            color='green'
+            color='#4CAF50'
+            size={28}
             raised={true}
             reverse={true}
             onPress={() => this.lightButtonHandler()}
@@ -348,7 +349,8 @@ class ControllerProject extends Component {
           <Icon
             name='report'
             type='material'
-            color='blue'
+            color='#4C5AAF'
+            size={28}
             raised={true}
             reverse={true}
             onPress={() => this.testButtonHandler()}
@@ -357,6 +359,7 @@ class ControllerProject extends Component {
             name='refresh'
             type='material'
             color='#ECD118'
+            size={28}
             raised={true}
             reverse={true}
             onPress={() => this.resetButtonHandler()}
