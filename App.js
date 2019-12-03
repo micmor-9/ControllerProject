@@ -5,6 +5,8 @@ import { Button, FlatList, Image, Linking, Modal, Platform, StatusBar, Text, Tex
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
 import BluetoothSerial from 'react-native-bluetooth-serial'
+import { LivePlayer } from "react-native-live-stream"
+import AsyncStorage from '@react-native-community/async-storage';
 import styles from './styles.js'
 
 
@@ -67,7 +69,8 @@ class ControllerProject extends Component {
       testStatus: 'off',
       powerStatus: 'off',
       resetStatus: 'off',
-      lightStatus: 'off'
+      lightStatus: 'off',
+      videoStatus: true
     }
   }
 
@@ -236,6 +239,7 @@ class ControllerProject extends Component {
   }
 
   resetButtonHandler() {
+    this.setState({ videoStatus: !this.state.videoStatus });
     Toast.showShortBottom('Avvio reset...');
     this.write('(R1)');
   }
@@ -255,7 +259,7 @@ class ControllerProject extends Component {
 
   render() {
     return (
-      <View style={{ flex: 10 }}>
+      <View style={{ flex: 1 }}>
         <StatusBar backgroundColor="#00255d" barStyle="light-content" />
         <View style={styles.topBar}>
           <Text style={styles.heading}>Controller</Text>
@@ -281,10 +285,30 @@ class ControllerProject extends Component {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.monitor}> 
-        </View>
-        
-        <View style={styles.basso}>
+
+        <LivePlayer 
+          source={{ uri: "rtmp://fms.105.net/live/rmc1" }}
+          ref={(ref) => {
+            this.player = ref
+          }}
+          style={styles.video}
+          paused={this.state.videoStatus}
+          muted={false}
+          bufferTime={300}
+          maxBufferTime={1000}
+          resizeMode={"cover"}
+          onLoading={() => {
+            
+          }}
+          onLoad={() => { 
+            Toast.showShortBottom('Video caricato');
+          }}
+          onEnd={() => { 
+
+          }}
+        />
+
+        <View>
 
           <View style={styles.padContainer}>
             
@@ -346,12 +370,14 @@ class ControllerProject extends Component {
 
           <Modal
             animationType="slide"
-            visible={this.state.wifiModalVisible}
+            visible={this.state.wifiModalVisible} 
+            transparent={true}           
             onRequestClose={() => {
               this.setWifiModalVisible(false);
             }}>
 
-            <View>
+            <View style={styles.wifiModal}>
+              <Text style={styles.modalHead}>Impostazioni streaming</Text>
               <View style={styles.wifiFieldView}>
                 <Text style={styles.wifiFieldLabel}>Nome</Text>
                 <TextInput
