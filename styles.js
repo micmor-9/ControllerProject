@@ -1,6 +1,20 @@
 import { StyleSheet } from 'react-native';
 
 export default styles = StyleSheet.create({
+  principale: {
+    marginTop: 22,
+    backgroundColor:"red",
+  },
+  monitor: {
+    backgroundColor:"black",
+    flex: 0.5,
+    width: 500,
+    height: 40,
+  },
+  basso: {
+    flex : 1,
+    flexDirection: 'column-reverse',
+  },
     container: {
       flex: 0.9,
       backgroundColor: '#F5FCFF'
@@ -106,8 +120,10 @@ export default styles = StyleSheet.create({
     // Joystick styles
     padContainer: {
       backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+      flex: 1, 
+      flexDirection: 'row',
+      alignContent: "center",
+      
     },
     boxContainer: {
       flexDirection: 'row'
@@ -120,14 +136,16 @@ export default styles = StyleSheet.create({
     },
   
     buttonContainer: {
+      
       marginVertical: 10,
       flexDirection: "row"
     },
 
     actionButton: {
-      width: "20%",
+      flexDirection: 'column',
+     flex:1,
       marginHorizontal: 10,
-      alignContent: "center",
+      
       justifyContent: "space-between"
     },
                                           
@@ -135,22 +153,40 @@ export default styles = StyleSheet.create({
         marginLeft: 30
     },
 
+    wifiModal: {
+      backgroundColor: "rgba(22, 59, 138, 0.95)",
+      height: "95%",
+      padding: 20
+    },
+
+    modalHead: {
+      fontSize: 30,
+      color: "#FFF",
+      paddingBottom: 20
+    },
+
     wifiFieldLabel: {
-      flex: 1,
       alignContent: "center",
-      textAlign: "center",
+      textAlign: "left",
       textAlignVertical: "center",
       fontWeight: "bold",
-      borderWidth: 0.5,
-      backgroundColor: "#EEEEEE"
+      color: "#FFFFFF",
+      height: 40,
+      fontSize: 16
     },
 
     wifiField: {
-      flex: 2,
-      borderWidth: 0.5
+      borderWidth: 0.5,
+      borderColor: "#FFF",
+      borderRadius: 5,
+      paddingHorizontal: 15,
+      color: "#FFF"
     },
 
-    wifiFieldView: {
-      flexDirection: "row"
+    video: {
+      flex: 1,
+      maxHeight: "30%",
+      width: "100%"
     }
+  
   })

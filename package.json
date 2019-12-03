@@ -3,19 +3,21 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --no-jetifier",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.6.3",
     "@remobile/react-native-toast": "^1.0.7",
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-android-open-settings": "^1.3.0",
     "react-native-axis-pad": "^0.9.4",
     "react-native-bluetooth-serial": "^1.0.0-rc1",
+    "react-native-live-stream": "^1.0.1",
     "react-native-system-setting": "^1.7.3"
   },
   "devDependencies": {
