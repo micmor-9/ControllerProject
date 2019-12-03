@@ -1,6 +1,20 @@
 import { StyleSheet } from 'react-native';
 
 export default styles = StyleSheet.create({
+  principale: {
+    marginTop: 22,
+    backgroundColor:"red",
+  },
+  monitor: {
+    backgroundColor:"black",
+    flex: 0.5,
+    width: 500,
+    height: 40,
+  },
+  basso: {
+    flex : 1,
+    flexDirection: 'column-reverse',
+  },
     container: {
       flex: 0.9,
       backgroundColor: '#F5FCFF'
@@ -106,8 +120,10 @@ export default styles = StyleSheet.create({
     // Joystick styles
     padContainer: {
       backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+      flex: 1, 
+      flexDirection: 'row',
+      alignContent: "center",
+      
     },
     boxContainer: {
       flexDirection: 'row'
@@ -120,14 +136,16 @@ export default styles = StyleSheet.create({
     },
   
     buttonContainer: {
+      
       marginVertical: 10,
       flexDirection: "row"
     },
 
     actionButton: {
-      width: "20%",
+      flexDirection: 'column',
+     flex:1,
       marginHorizontal: 10,
-      alignContent: "center",
+      
       justifyContent: "space-between"
     },
                                           
@@ -153,4 +171,5 @@ export default styles = StyleSheet.create({
     wifiFieldView: {
       flexDirection: "row"
     }
+  
   })

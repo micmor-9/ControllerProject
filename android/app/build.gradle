@@ -176,6 +176,10 @@ android {
 
         }
     }
+    packagingOptions {
+      pickFirst '**/libjsc.so'
+
+  }
 }
 
 dependencies {
