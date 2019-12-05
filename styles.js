@@ -52,7 +52,7 @@ export default styles = StyleSheet.create({
     color: '#238923'
   },
   devicesList: {
-    height: '80%'
+    height: '50%'
   },
   deviceRow: {
     justifyContent: 'space-between',
@@ -68,11 +68,7 @@ export default styles = StyleSheet.create({
   },
   listItem: {
     flex: 1,
-    height: 48,
-    paddingHorizontal: 16,
-    borderColor: '#ccc',
-    borderBottomWidth: 0.5,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   fixedFooter: {
     flexDirection: 'row',
@@ -140,6 +136,23 @@ export default styles = StyleSheet.create({
     padding: 20,
   },
 
+  bluetoothModal: {
+    backgroundColor: "rgba(22, 59, 138, 0.95)",
+    flex: 1,
+    alignContent: 'center',
+    padding: 20,
+  },
+
+  bluetoothButtonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 30
+  },
+
+  bluetoothButton: {
+    color: 'white'
+  },
+
   modalHead: {
     fontSize: 30,
     color: "#FFF",
@@ -147,25 +160,13 @@ export default styles = StyleSheet.create({
   },
 
   modalButton: {
-    alignItems: "center",
-    marginTop: 100
-  },
-
-  wifiFieldLabel: {
-    alignContent: "center",
-    textAlign: "left",
-    textAlignVertical: "center",
-    fontWeight: "bold",
-    color: "#FFFFFF",
-    height: 40,
-    fontSize: 16
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flex: 1,
+    marginTop: 10
   },
 
   wifiField: {
-    borderWidth: 0.5,
-    borderColor: "#FFF",
-    borderRadius: 5,
-    paddingHorizontal: 15,
     color: "#FFF"
   },
 

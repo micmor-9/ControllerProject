@@ -8,7 +8,7 @@ import BluetoothSerial from 'react-native-bluetooth-serial'
 import { LivePlayer } from "react-native-live-stream"
 import AsyncStorage from '@react-native-community/async-storage';
 import styles from './styles.js'
-import { Icon } from 'react-native-elements'
+import { Card, ListItem, Button, Icon, Input } from 'react-native-elements'
 
 
 global.Buffer = Buffer
@@ -26,27 +26,13 @@ const DeviceList = ({ devices, connectedId, showConnectedIcon, onDevicePress }) 
     keyExtractor={(item, index) => item.id}
     data={devices}
     renderItem={device =>
-      <TouchableOpacity
-        underlayColor='#DDDDDD'
-        key={`${device.item.index}_${device.item.index}`}
-        style={styles.listItem}
-        onPress={() => onDevicePress(device.item)}>
-        <View style={{ flexDirection: 'row' }}>
-          {showConnectedIcon
-            ? (
-              <View style={{ width: 48, height: 48, opacity: 0.4 }}>
-                {connectedId === device.item.id
-                  ? (
-                    <Image style={{ resizeMode: 'contain', width: 24, height: 24, flex: 1 }} source={require('./images/ic_done_black_24dp.png')} />
-                  ) : null}
-              </View>
-            ) : null}
-          <View style={styles.deviceRow}>
-            <Text style={styles.deviceName}>{device.item.name}</Text>
-            <Text style={styles.deviceId}>{`<${device.item.id}>`}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <ListItem
+        title={device.item.name}
+        subtitle={device.item.id}
+        bottomDivider
+        checkmark={showConnectedIcon && connectedId == device.item.id}
+        onPress={() => onDevicePress(device.item)}
+      />
     }
   />
 
@@ -58,15 +44,9 @@ class ControllerProject extends Component {
       isEnabled: false,
       devices: [],
       connected: false,
-      section: 0,
-      modalVisible: false,
+      bluetoothModalVisible: false,
       wifiModalVisible: false,
-      wifiName: '',
       wifiIp: 'rtmp://fms.105.net/live/rmc1',
-      wifiPort: '',
-      wifiProtocol: '',
-      wifiUsername: '',
-      wifiPassword: '',
       testStatus: 'off',
       powerStatus: 'off',
       resetStatus: 'off',
@@ -128,7 +108,7 @@ class ControllerProject extends Component {
     BluetoothSerial.disconnect()
       .then(() => this.setState({ connected: false }))
       .catch((err) => Toast.showShortBottom(err.message))
-    this.updateDevices();
+    //this.updateDevices();
   }
 
   /**
@@ -167,8 +147,13 @@ class ControllerProject extends Component {
 
   // Funzione che viene chiamata quando si seleziona un dispositivo dalla lista 
   onDevicePress(device) {
-    this.connect(device);
-    if (this.state.modalVisible) {
+    if (this.state.connected == true) {
+      this.disconnect(device)
+    } else {
+      this.connect(device);
+    }
+
+    if (this.state.bluetoothModalVisible) {
       this.setModalVisible(false);
     }
   }
@@ -190,9 +175,13 @@ class ControllerProject extends Component {
     this.setState({ wifiModalVisible: visible });
   }
 
+  setBluetoothModalVisible(visible) {
+    this.setState({ bluetoothModalVisible: visible });
+  }
+
   //Funzione che apre la schermata dei dispositivi associati
   openDevicesModal() {
-    this.setModalVisible(!this.state.modalVisible);
+    this.setBluetoothModalVisible(!this.state.bluetoothModalVisible);
   }
 
   //Funzione che apre la schermata dei dati del display
@@ -255,12 +244,12 @@ class ControllerProject extends Component {
 
   //Funzione pulsante play
   playVideo(status = 'no') {
-    if(status === 'no') {
+    if (status === 'no') {
       this.setState({ videoStatus: !this.state.videoStatus });
     } else {
       this.setState({ videoStatus: status });
     }
-    
+
   }
 
   //Funzione pulsante light
@@ -331,15 +320,6 @@ class ControllerProject extends Component {
           bufferTime={300}
           maxBufferTime={1000}
           resizeMode={"cover"}
-          onLoading={() => {
-
-          }}
-          onLoad={() => {
-            Toast.showShortBottom('Video caricato');
-          }}
-          onEnd={() => {
-
-          }}
         />
 
 
@@ -367,6 +347,7 @@ class ControllerProject extends Component {
             raised={true}
             reverse={true}
             onPress={() => this.powerButtonHandler()}
+            onLongPress={() => Toast.showShortBottom('Accensione')}
           />
           <Icon
             name='highlight'
@@ -376,6 +357,7 @@ class ControllerProject extends Component {
             raised={true}
             reverse={true}
             onPress={() => this.lightButtonHandler()}
+            onLongPress={() => Toast.showShortBottom('Luce')}
           />
           <Icon
             name='report'
@@ -385,6 +367,7 @@ class ControllerProject extends Component {
             raised={true}
             reverse={true}
             onPress={() => this.testButtonHandler()}
+            onLongPress={() => Toast.showShortBottom('Test')}
           />
           <Icon
             name='refresh'
@@ -394,6 +377,7 @@ class ControllerProject extends Component {
             raised={true}
             reverse={true}
             onPress={() => this.resetButtonHandler()}
+            onLongPress={() => Toast.showShortBottom('Reset')}
           />
         </View>
 
@@ -408,62 +392,17 @@ class ControllerProject extends Component {
           <View style={styles.wifiModal}>
             <Text style={styles.modalHead}>Impostazioni streaming</Text>
             <View style={styles.wifiFieldView}>
-              <Text style={styles.wifiFieldLabel}>Nome</Text>
-              <TextInput
-                style={styles.wifiField}
-                value={this.state.wifiName}
-                onChangeText={(enteredText) => {
-                  this.setState({ wifiName: enteredText })
-                }}
-              />
-            </View>
-            <View style={styles.wifiFieldView}>
-              <Text style={styles.wifiFieldLabel}>IP</Text>
-              <TextInput
-                style={styles.wifiField}
+              <Input
+                label='IP'
+                placeholder='Indirizzo Ip'
+                placeholderTextColor='#AAA'
+                inputStyle={styles.wifiField}
+                labelStyle={styles.wifiField}
+                leftIcon={{ type: 'material', name: 'language', color: 'white' }}
+                leftIconContainerStyle={{ paddingLeft: 0, paddingRight: 10 }}
                 value={this.state.wifiIp}
-                onChangeText={(enteredText) => {
-                  this.setState({ wifiIp: enteredText })
-                }}
-              />
-            </View>
-            <View style={styles.wifiFieldView}>
-              <Text style={styles.wifiFieldLabel}>Port</Text>
-              <TextInput
-                style={styles.wifiField}
-                value={this.state.wifiPort}
-                onChangeText={(enteredText) => {
-                  this.setState({ wifiPort: enteredText })
-                }}
-              />
-            </View>
-            <View style={styles.wifiFieldView}>
-              <Text style={styles.wifiFieldLabel}>Protocol</Text>
-              <TextInput
-                style={styles.wifiField}
-                value={this.state.wifiProtocol}
-                onChangeText={(enteredText) => {
-                  this.setState({ wifiProtocol: enteredText })
-                }}
-              />
-            </View>
-            <View style={styles.wifiFieldView}>
-              <Text style={styles.wifiFieldLabel}>Username</Text>
-              <TextInput
-                style={styles.wifiField}
-                value={this.state.wifiUsername}
-                onChangeText={(enteredText) => {
-                  this.setState({ wifiUsername: enteredText })
-                }}
-              />
-            </View>
-            <View style={styles.wifiFieldView}>
-              <Text style={styles.wifiFieldLabel}>Password</Text>
-              <TextInput
-                style={styles.wifiField}
-                value={this.state.wifiPassword}
-                onChangeText={(enteredText) => {
-                  this.setState({ wifiPassword: enteredText })
+                onChangeText={(text) => {
+                  this.setState({ wifiIp: text })
                 }}
               />
             </View>
@@ -484,42 +423,54 @@ class ControllerProject extends Component {
 
         <Modal
           animationType="slide"
-          visible={this.state.modalVisible}
+          visible={this.state.bluetoothModalVisible}
+          transparent={true}
           onRequestClose={() => {
             this.setModalVisible(false);
           }}>
-          <View>
+          <View style={styles.bluetoothModal}>
+            <Text style={styles.modalHead}>Dispositivi Bluetooth</Text>
             {this.state.isEnabled ? (
               <DeviceList
-                showConnectedIcon={this.state.section === 0}
+                showConnectedIcon={this.state.connected}
                 connectedId={this.state.device && this.state.device.id}
                 devices={this.state.devices}
                 onDevicePress={(device) => this.onDevicePress(device)}
               />
             ) : null
             }
-            <MaterialButton
-              title='CHIUDI'
-              onPress={() => {
-                this.setModalVisible(!this.state.modalVisible);
-              }}
-            />
-            <MaterialButton
-              title='AGGIORNA'
-              onPress={() => this.updateDevices()}
-            />
-            <MaterialButton
-              title='DISPOSITIVO NON TROVATO?'
-              onPress={() => {
-                {
-                  Platform.OS === 'android' ? (
-                    AndroidOpenSettings.bluetoothSettings()
-                  ) : (
-                      Linking.openURL('prefs:root=General&path=Bluetooth')
-                    )
-                };
-              }}
-            />
+            <View style={styles.modalButton}>
+              <Button
+                title='AGGIORNA'
+                titleStyle={styles.bluetoothButton}
+                type='clear'
+                onPress={() => this.updateDevices()}
+              />
+              <Button
+                title='DISPOSITIVO NON TROVATO?'
+                titleStyle={styles.bluetoothButton}
+                type='clear'
+                onPress={() => {
+                  {
+                    Platform.OS === 'android' ? (
+                      AndroidOpenSettings.bluetoothSettings()
+                    ) : (
+                        Linking.openURL('prefs:root=General&path=Bluetooth')
+                      )
+                  };
+                }}
+              />
+              <Icon
+                name='close'
+                type='material'
+                color='#00255d'
+                size={28}
+                raised={true}
+                reverse={false}
+                onPress={() => this.setBluetoothModalVisible(!this.state.bluetoothModalVisible)}
+              />
+            </View>
+
           </View>
         </Modal>
       </View>
