@@ -6,10 +6,8 @@ import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import { LivePlayer } from "react-native-live-stream"
-import AsyncStorage from '@react-native-community/async-storage';
 import styles from './styles.js'
-import { Card, ListItem, Button, Icon, Input } from 'react-native-elements'
-
+import { ListItem, Button, Icon, Input } from 'react-native-elements'
 
 global.Buffer = Buffer
 const iconv = require('iconv-lite')
@@ -47,10 +45,10 @@ class ControllerProject extends Component {
       bluetoothModalVisible: false,
       wifiModalVisible: false,
       wifiIp: 'rtmp://fms.105.net/live/rmc1',
-      testStatus: 'off',
-      powerStatus: 'off',
-      resetStatus: 'off',
-      lightStatus: 'off',
+      testStatus: false,
+      powerStatus: false,
+      resetStatus: false,
+      lightStatus: false,
       videoStatus: true
     }
   }
@@ -225,12 +223,12 @@ class ControllerProject extends Component {
 
   //Funzione pulsante power
   powerButtonHandler() {
-    if (this.state.powerStatus === 'off') {
-      this.setState({ powerStatus: 'on' });
+    if (this.state.powerStatus === false) {
+      this.setState({ powerStatus: true });
       Toast.showShortBottom('DISPOSITIVO ACCESO');
       this.write('(P1)');
     } else {
-      this.setState({ powerStatus: 'off' });
+      this.setState({ powerStatus: false });
       Toast.showShortBottom('DISPOSITIVO SPENTO');
       this.write('(P0)');
     }
@@ -254,12 +252,12 @@ class ControllerProject extends Component {
 
   //Funzione pulsante light
   lightButtonHandler() {
-    if (this.state.lightStatus === 'off') {
-      this.setState({ lightStatus: 'on' });
+    if (this.state.lightStatus === false) {
+      this.setState({ lightStatus: true });
       Toast.showShortBottom('LUCE ACCESA');
       this.write('(L1)');
     } else {
-      this.setState({ lightStatus: 'off' });
+      this.setState({ lightStatus: false });
       Toast.showShortBottom('LUCE SPENTA');
       this.write('(L0)');
     }
@@ -345,7 +343,7 @@ class ControllerProject extends Component {
             color='red'
             size={28}
             raised={true}
-            reverse={true}
+            reverse={!this.state.powerStatus}
             onPress={() => this.powerButtonHandler()}
             onLongPress={() => Toast.showShortBottom('Accensione')}
           />
@@ -355,7 +353,7 @@ class ControllerProject extends Component {
             color='#4CAF50'
             size={28}
             raised={true}
-            reverse={true}
+            reverse={!this.state.lightStatus}
             onPress={() => this.lightButtonHandler()}
             onLongPress={() => Toast.showShortBottom('Luce')}
           />
