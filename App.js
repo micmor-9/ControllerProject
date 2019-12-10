@@ -217,8 +217,15 @@ class ControllerProject extends Component {
 
   //Funzione pulsante test
   testButtonHandler() {
-    Toast.showShortBottom('Eseguo test di connessione...');
-    this.write('(T1)');
+    if (this.state.testStatus === false) {
+      this.setState({ testStatus: true });
+      Toast.showShortBottom('Eseguo test di connessione... TEST ON');
+      this.write('(T1)');
+    } else {
+      this.setState({ testStatus: false });
+      Toast.showShortBottom('Eseguo test di connessione... TEST OFF');
+      this.write('(T0)');
+    }
   }
 
   //Funzione pulsante power
@@ -363,7 +370,7 @@ class ControllerProject extends Component {
             color='#4C5AAF'
             size={28}
             raised={true}
-            reverse={true}
+            reverse={!this.state.testStatus}
             onPress={() => this.testButtonHandler()}
             onLongPress={() => Toast.showShortBottom('Test')}
           />
