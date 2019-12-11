@@ -171,8 +171,7 @@ export default styles = StyleSheet.create({
   },
 
   video: {
-    flex: 1,
-    maxHeight: "30%",
+    height: "30%",
     width: "100%"
   }
 

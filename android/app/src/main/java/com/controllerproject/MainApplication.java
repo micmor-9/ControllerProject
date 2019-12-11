@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
+import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import org.wonday.live.RNLiveStreamPackage;
 import com.facebook.react.ReactNativeHost;

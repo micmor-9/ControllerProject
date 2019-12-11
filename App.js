@@ -1,11 +1,11 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TouchableOpacity, View, Alert } from 'react-native'
+import { WebView } from 'react-native-webview';
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
 import BluetoothSerial from 'react-native-bluetooth-serial'
-import { LivePlayer } from "react-native-live-stream"
 import styles from './styles.js'
 import { ListItem, Button, Icon, Input } from 'react-native-elements'
 
@@ -44,12 +44,13 @@ class ControllerProject extends Component {
       connected: false,
       bluetoothModalVisible: false,
       wifiModalVisible: false,
-      wifiIp: 'rtmp://fms.105.net/live/rmc1',
+      wifiIp: 'http://192.168.0.206:8081',
+      wifiIpEdit: 'http://192.168.0.206:8081',
       testStatus: false,
       powerStatus: false,
       resetStatus: false,
       lightStatus: false,
-      videoStatus: true
+      videoStatus: false
     }
   }
 
@@ -184,7 +185,7 @@ class ControllerProject extends Component {
 
   //Funzione che apre la schermata dei dati del display
   openDisplayModal() {
-    this.playVideo(true);
+    this.playVideo(false);
     this.setWifiModalVisible(!this.state.wifiModalVisible);
   }
 
@@ -249,10 +250,9 @@ class ControllerProject extends Component {
 
   //Funzione pulsante play
   playVideo(status = 'no') {
-    if (status === 'no') {
-      this.setState({ videoStatus: !this.state.videoStatus });
-    } else {
-      this.setState({ videoStatus: status });
+    if(status === 'no') {
+      this.webview.stopLoading();
+      this.webview.reload();
     }
 
   }
@@ -280,17 +280,10 @@ class ControllerProject extends Component {
           <Text style={styles.heading}>Controller</Text>
           <View style={styles.enableInfoWrapper}>
             <TouchableOpacity onPress={() => { this.playVideo() }} style={styles.topBarButton}>
-              {this.state.videoStatus ? (
                 <Image
-                  source={require('./images/baseline_play_arrow_white.png')}
+                  source={require('./images/baseline_autorenew_white.png')}
                   style={styles.iconImage}
                 />
-              ) : (
-                  <Image
-                    source={require('./images/baseline_pause_white.png')}
-                    style={styles.iconImage}
-                  />
-                )}
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { this.openDisplayModal() }} style={styles.topBarButton}>
               <Image
@@ -314,22 +307,16 @@ class ControllerProject extends Component {
           </View>
         </View>
 
-        <LivePlayer
-          source={{ uri: this.state.wifiIp }}
-          ref={(ref) => {
-            this.player = ref
-          }}
-          style={styles.video}
-          paused={this.state.videoStatus}
-          muted={false}
-          bufferTime={300}
-          maxBufferTime={1000}
-          resizeMode={"cover"}
-        />
-
+        <View style={styles.video}>
+          <WebView
+            ref={ref => (this.webview = ref)}
+            source={{ uri: this.state.wifiIp }}
+            scrollEnabled={false}
+            overScrollMode='never'
+          />
+        </View>
 
         <View style={styles.padContainer}>
-
           <AxisPad
             size={220}
             handlerSize={80}
@@ -405,9 +392,9 @@ class ControllerProject extends Component {
                 labelStyle={styles.wifiField}
                 leftIcon={{ type: 'material', name: 'language', color: 'white' }}
                 leftIconContainerStyle={{ paddingLeft: 0, paddingRight: 10 }}
-                value={this.state.wifiIp}
+                value={this.state.wifiIpEdit}
                 onChangeText={(text) => {
-                  this.setState({ wifiIp: text })
+                  this.setState({ wifiIpEdit: text })
                 }}
               />
             </View>
@@ -419,7 +406,10 @@ class ControllerProject extends Component {
                 size={28}
                 raised={true}
                 reverse={false}
-                onPress={() => this.setWifiModalVisible(!this.state.wifiModalVisible)}
+                onPress={() => {
+                  this.setState({ wifiIp: this.state.wifiIpEdit });
+                  this.setWifiModalVisible(!this.state.wifiModalVisible);
+                }}
               />
             </View>
 
