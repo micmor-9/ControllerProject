@@ -1,7 +1,7 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TouchableOpacity, View, Alert } from 'react-native'
+import { FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native'
 import { WebView } from 'react-native-webview';
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
@@ -38,8 +38,8 @@ class ControllerProject extends Component {
       connected: false,
       bluetoothModalVisible: false,
       wifiModalVisible: false,
-      wifiIp: 'http://192.168.0.206:8081',
-      wifiIpEdit: 'http://192.168.0.206:8081',
+      wifiIp: '',
+      wifiIpEdit: '',
       testStatus: false,
       powerStatus: false,
       resetStatus: false,
@@ -243,12 +243,9 @@ class ControllerProject extends Component {
   }
 
   //Funzione pulsante play
-  playVideo(status = 'no') {
-    if(status === 'no') {
-      this.webview.stopLoading();
-      this.webview.reload();
-    }
-
+  playVideo() {
+    this.webview.stopLoading();
+    this.webview.reload();
   }
 
   //Funzione pulsante light
@@ -271,13 +268,13 @@ class ControllerProject extends Component {
       <View style={{ flex: 1 }}>
         <StatusBar backgroundColor="#00255d" barStyle="light-content" />
         <View style={styles.topBar}>
-          <Text style={styles.heading}>Controller</Text>
+          <Text style={styles.heading}>Robot Controller</Text>
           <View style={styles.enableInfoWrapper}>
             <TouchableOpacity onPress={() => { this.playVideo() }} style={styles.topBarButton}>
-                <Image
-                  source={require('./images/baseline_autorenew_white.png')}
-                  style={styles.iconImage}
-                />
+              <Image
+                source={require('./images/baseline_autorenew_white.png')}
+                style={styles.iconImage}
+              />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { this.openDisplayModal() }} style={styles.topBarButton}>
               <Image
@@ -307,6 +304,13 @@ class ControllerProject extends Component {
             source={{ uri: this.state.wifiIp }}
             scrollEnabled={false}
             overScrollMode='never'
+            onMessage={(e) => {
+              return (
+                <View>
+                  Error occurred while loading the page.
+                </View>
+              );
+            }}
           />
         </View>
 
@@ -365,6 +369,22 @@ class ControllerProject extends Component {
             onPress={() => this.resetButtonHandler()}
             onLongPress={() => Toast.showShortBottom('Reset')}
           />
+        </View>
+        <View style={styles.logoAbout}>
+          <Image
+            source={require('./images/logo_sitael.png')}
+            style={styles.logoImage}
+          />
+          <View style={styles.aboutIcon}>
+            <Icon
+              name='info'
+              type='material'
+              color='#004c8b'
+              size={28}              
+              raised={false}
+              reverse={false}
+            />
+          </View>
         </View>
 
         <Modal

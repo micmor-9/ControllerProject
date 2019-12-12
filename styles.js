@@ -173,6 +173,24 @@ export default styles = StyleSheet.create({
   video: {
     height: "30%",
     width: "100%"
+  },
+
+  logoAbout: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  logoImage: {
+    flex: 2,
+    alignItems: 'center',
+    resizeMode: 'center'
+  },
+
+  aboutIcon: {
+    flex: 1,
+    alignItems: 'center'
   }
 
 })
