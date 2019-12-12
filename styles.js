@@ -122,8 +122,7 @@ export default styles = StyleSheet.create({
     marginHorizontal: 30,
     justifyContent: "space-between",
     alignContent: "center",
-    alignItems: "center",
-    maxHeight: "10%"
+    alignItems: "center"
   },
 
   topBarButton: {
@@ -159,6 +158,12 @@ export default styles = StyleSheet.create({
     paddingBottom: 20
   },
 
+  modalHeadCredits: {
+    fontSize: 30,
+    color: "#000",
+    paddingBottom: 20
+  },
+
   modalButton: {
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -180,6 +185,7 @@ export default styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: 'transparent'
   },
 
   logoImage: {
@@ -190,6 +196,10 @@ export default styles = StyleSheet.create({
 
   aboutIcon: {
     flex: 1,
+    alignItems: 'center'
+  },
+
+  overlayContent: {
     alignItems: 'center'
   }
 

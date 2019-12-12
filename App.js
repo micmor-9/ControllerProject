@@ -1,13 +1,13 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native'
+import { FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import { WebView } from 'react-native-webview';
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import styles from './styles.js'
-import { ListItem, Button, Icon, Input } from 'react-native-elements'
+import { ListItem, Button, Icon, Input, Overlay } from 'react-native-elements'
 
 global.Buffer = Buffer
 const iconv = require('iconv-lite')
@@ -38,13 +38,14 @@ class ControllerProject extends Component {
       connected: false,
       bluetoothModalVisible: false,
       wifiModalVisible: false,
-      wifiIp: '',
-      wifiIpEdit: '',
+      wifiIp: 'http://192.168.0.206:8081',
+      wifiIpEdit: 'http://192.168.0.206:8081',
       testStatus: false,
       powerStatus: false,
       resetStatus: false,
       lightStatus: false,
-      videoStatus: false
+      videoStatus: false,
+      creditVisible: false
     }
   }
 
@@ -212,7 +213,7 @@ class ControllerProject extends Component {
 
   //Funzione pulsante test
   testButtonHandler() {
-    if (this.state.testStatus === false) {
+    if (this.state.testStatus == false) {
       this.setState({ testStatus: true });
       Toast.showShortBottom('Eseguo test di connessione... TEST ON');
       this.write('(T1)');
@@ -225,7 +226,7 @@ class ControllerProject extends Component {
 
   //Funzione pulsante power
   powerButtonHandler() {
-    if (this.state.powerStatus === false) {
+    if (this.state.powerStatus == false) {
       this.setState({ powerStatus: true });
       Toast.showShortBottom('DISPOSITIVO ACCESO');
       this.write('(P1)');
@@ -250,7 +251,7 @@ class ControllerProject extends Component {
 
   //Funzione pulsante light
   lightButtonHandler() {
-    if (this.state.lightStatus === false) {
+    if (this.state.lightStatus == false) {
       this.setState({ lightStatus: true });
       Toast.showShortBottom('LUCE ACCESA');
       this.write('(L1)');
@@ -259,7 +260,10 @@ class ControllerProject extends Component {
       Toast.showShortBottom('LUCE SPENTA');
       this.write('(L0)');
     }
+  }
 
+  showCredits() {
+    this.setState({ creditVisible: true })
   }
 
   //Funzione principale che realizza l'interfaccia grafica
@@ -326,8 +330,8 @@ class ControllerProject extends Component {
             }}
           >
           </AxisPad>
-
         </View>
+
         <View style={styles.actionButton}>
           <Icon
             name='power-settings-new'
@@ -370,6 +374,7 @@ class ControllerProject extends Component {
             onLongPress={() => Toast.showShortBottom('Reset')}
           />
         </View>
+        
         <View style={styles.logoAbout}>
           <Image
             source={require('./images/logo_sitael.png')}
@@ -380,10 +385,25 @@ class ControllerProject extends Component {
               name='info'
               type='material'
               color='#004c8b'
-              size={28}              
-              raised={false}
-              reverse={false}
+              size={28}
+              onPress={() => this.showCredits()}
             />
+            <Overlay
+              isVisible={this.state.creditVisible}
+              windowBackgroundColor="rgba(0, 0, 0, .5)"
+              overlayBackgroundColor="white"
+              width="60%"
+              height="auto"
+              onBackdropPress={() => this.setState({ creditVisible: false })}
+            >
+              <View style={styles.overlayContent}>
+                <Text style={styles.modalHeadCredits}>Credits</Text>
+                <Text>Carlo Mascia</Text>
+                <Text>Elia Matarese</Text>
+                <Text>Michele Morgigno</Text>
+                <Text>Giovanni Paradiso</Text>
+              </View>
+            </Overlay>
           </View>
         </View>
 
