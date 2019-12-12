@@ -18,10 +18,8 @@
     "react-native-axis-pad": "^0.9.4",
     "react-native-bluetooth-serial": "^1.0.0-rc1",
     "react-native-elements": "^1.2.7",
-    "react-native-live-stream": "^1.0.1",
     "react-native-system-setting": "^1.7.3",
     "react-native-vector-icons": "^6.6.0",
-    "react-native-video": "^5.0.2",
     "react-native-webview": "^7.6.0"
   },
   "devDependencies": {

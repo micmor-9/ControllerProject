@@ -12,12 +12,6 @@ import { ListItem, Button, Icon, Input } from 'react-native-elements'
 global.Buffer = Buffer
 const iconv = require('iconv-lite')
 
-const MaterialButton = ({ title, onPress, style, textStyle }) =>
-  <TouchableOpacity style={[styles.MaterialButton, style]} onPress={onPress}>
-    <Text style={[styles.MaterialButtonText, textStyle]}>{title.toUpperCase()}</Text>
-  </TouchableOpacity>
-
-
 const DeviceList = ({ devices, connectedId, showConnectedIcon, onDevicePress }) =>
   <FlatList
     style={styles.devicesList}
