@@ -1,7 +1,7 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { FlatList, Image, Linking, Modal, Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Dimensions, Linking, Modal, Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import { WebView } from 'react-native-webview';
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
@@ -11,6 +11,8 @@ import { ListItem, Button, Icon, Input, Overlay } from 'react-native-elements'
 
 global.Buffer = Buffer
 const iconv = require('iconv-lite')
+const screenWidth = Math.round(Dimensions.get('window').width)
+const screenHeight = Math.round(Dimensions.get('window').height)
 
 const DeviceList = ({ devices, connectedId, showConnectedIcon, onDevicePress }) =>
   <FlatList
@@ -320,8 +322,8 @@ class ControllerProject extends Component {
 
         <View style={styles.padContainer}>
           <AxisPad
-            size={220}
-            handlerSize={80}
+            size={screenHeight*0.3}
+            handlerSize={(screenHeight*0.3)/(2.5)}
             step={1 / 360}
             resetOnRelease={true}
             autoCenter={false}
@@ -337,7 +339,7 @@ class ControllerProject extends Component {
             name='power-settings-new'
             type='material'
             color='red'
-            size={28}
+            size={screenWidth/15}
             raised={true}
             reverse={!this.state.powerStatus}
             onPress={() => this.powerButtonHandler()}
@@ -347,7 +349,7 @@ class ControllerProject extends Component {
             name='highlight'
             type='material'
             color='#4CAF50'
-            size={28}
+            size={screenWidth/15}
             raised={true}
             reverse={!this.state.lightStatus}
             onPress={() => this.lightButtonHandler()}
@@ -357,7 +359,7 @@ class ControllerProject extends Component {
             name='report'
             type='material'
             color='#4C5AAF'
-            size={28}
+            size={screenWidth/15}
             raised={true}
             reverse={!this.state.testStatus}
             onPress={() => this.testButtonHandler()}
@@ -367,7 +369,7 @@ class ControllerProject extends Component {
             name='refresh'
             type='material'
             color='#ECD118'
-            size={28}
+            size={screenWidth/15}
             raised={true}
             reverse={true}
             onPress={() => this.resetButtonHandler()}
@@ -443,6 +445,8 @@ class ControllerProject extends Component {
                 onPress={() => {
                   this.setState({ wifiIp: this.state.wifiIpEdit });
                   this.setWifiModalVisible(!this.state.wifiModalVisible);
+                  this.webview.stopLoading();
+                  this.webview.reload();
                 }}
               />
             </View>
