@@ -98,7 +98,8 @@ export default styles = StyleSheet.create({
   },
 
   modalHeadCredits: {
-    fontSize: 30,
+    fontWeight: 'bold',
+    fontSize: 25,
     color: "#000",
     paddingBottom: 20
   },
@@ -140,6 +141,35 @@ export default styles = StyleSheet.create({
 
   overlayContent: {
     alignItems: 'center'
+  },
+
+  creditsField: {
+    height: '20%',
+    width: '100%',
+    paddingHorizontal: '10%',
+    textAlign: 'left'
+  },
+
+  creditsName: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'left'
+  },
+
+  creditsEmail: {
+    textDecorationLine: 'underline',
+    color: '#004c8b'
+  },
+
+  errorView: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#F5FCFF',
+    alignItems: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around'
   }
 
 })

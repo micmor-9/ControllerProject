@@ -310,20 +310,27 @@ class ControllerProject extends Component {
             source={{ uri: this.state.wifiIp }}
             scrollEnabled={false}
             overScrollMode='never'
-            onMessage={(e) => {
-              return (
-                <View>
-                  Error occurred while loading the page.
+            renderError={errorName => (
+              <View style={styles.errorView}>
+                <View style={{ flex: 1, alignItems: 'center', marginTop: 40 }}>
+                  <Icon
+                    name='warning'
+                    type='material'
+                    color='#B71C1C'
+                    size={50}
+                  />
+                  <Text>Si è verificato un errore nel caricamento del video</Text>
+                  <Text>{errorName}</Text>
                 </View>
-              );
-            }}
+              </View>
+            )}
           />
         </View>
 
         <View style={styles.padContainer}>
           <AxisPad
-            size={screenHeight*0.3}
-            handlerSize={(screenHeight*0.3)/(2.5)}
+            size={screenHeight * 0.3}
+            handlerSize={(screenHeight * 0.3) / (2.5)}
             step={1 / 360}
             resetOnRelease={true}
             autoCenter={false}
@@ -338,8 +345,8 @@ class ControllerProject extends Component {
           <Icon
             name='power-settings-new'
             type='material'
-            color='red'
-            size={screenWidth/15}
+            color='#D32F2F'
+            size={screenWidth / 15}
             raised={true}
             reverse={!this.state.powerStatus}
             onPress={() => this.powerButtonHandler()}
@@ -349,7 +356,7 @@ class ControllerProject extends Component {
             name='highlight'
             type='material'
             color='#4CAF50'
-            size={screenWidth/15}
+            size={screenWidth / 15}
             raised={true}
             reverse={!this.state.lightStatus}
             onPress={() => this.lightButtonHandler()}
@@ -359,7 +366,7 @@ class ControllerProject extends Component {
             name='report'
             type='material'
             color='#4C5AAF'
-            size={screenWidth/15}
+            size={screenWidth / 15}
             raised={true}
             reverse={!this.state.testStatus}
             onPress={() => this.testButtonHandler()}
@@ -369,14 +376,14 @@ class ControllerProject extends Component {
             name='refresh'
             type='material'
             color='#ECD118'
-            size={screenWidth/15}
+            size={screenWidth / 15}
             raised={true}
             reverse={true}
             onPress={() => this.resetButtonHandler()}
             onLongPress={() => Toast.showShortBottom('Reset')}
           />
         </View>
-        
+
         <View style={styles.logoAbout}>
           <Image
             source={require('./images/logo_sitael.png')}
@@ -394,16 +401,28 @@ class ControllerProject extends Component {
               isVisible={this.state.creditVisible}
               windowBackgroundColor="rgba(0, 0, 0, .5)"
               overlayBackgroundColor="white"
-              width="60%"
-              height="auto"
+              width="70%"
+              height="50%"
               onBackdropPress={() => this.setState({ creditVisible: false })}
             >
               <View style={styles.overlayContent}>
-                <Text style={styles.modalHeadCredits}>Credits</Text>
-                <Text>Carlo Mascia</Text>
-                <Text>Elia Matarese</Text>
-                <Text>Michele Morgigno</Text>
-                <Text>Giovanni Paradiso</Text>
+                <Text style={styles.modalHeadCredits}>Crediti</Text>
+                <View style={styles.creditsField}>
+                  <Text style={styles.creditsName}>Carlo Mascia</Text>
+                  <TouchableOpacity onPress={() => Linking.openURL('mailto:c.mascia1@studenti.poliba.it')}><Text style={styles.creditsEmail}>c.mascia1@studenti.poliba.it</Text></TouchableOpacity>
+                </View>
+                <View style={styles.creditsField}>
+                  <Text style={styles.creditsName}>Elia Matarese</Text>
+                  <TouchableOpacity onPress={() => Linking.openURL('mailto:e.matarese@studenti.poliba.it')}><Text style={styles.creditsEmail}>e.matarese@studenti.poliba.it</Text></TouchableOpacity>
+                </View>
+                <View style={styles.creditsField}>
+                  <Text style={styles.creditsName}>Michele Morgigno</Text>
+                  <TouchableOpacity onPress={() => Linking.openURL('mailto:m.morgigno@studenti.poliba.it')}><Text style={styles.creditsEmail}>m.morgigno@studenti.poliba.it</Text></TouchableOpacity>
+                </View>
+                <View style={styles.creditsField}>
+                  <Text style={styles.creditsName}>Giovanni Paradiso</Text>
+                  <TouchableOpacity onPress={() => Linking.openURL('mailto:g.paradiso@studenti.poliba.it')}><Text style={styles.creditsEmail}>g.paradiso@studenti.poliba.it</Text></TouchableOpacity>
+                </View>
               </View>
             </Overlay>
           </View>
