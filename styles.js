@@ -98,10 +98,13 @@ export default styles = StyleSheet.create({
   },
 
   modalHeadCredits: {
+    width: '100%',
     fontWeight: 'bold',
     fontSize: 25,
     color: "#000",
-    paddingBottom: 20
+    paddingVertical: 10,
+    paddingHorizontal: '10%',
+    textAlign: 'center'
   },
 
   modalButton: {

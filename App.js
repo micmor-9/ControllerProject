@@ -312,7 +312,7 @@ class ControllerProject extends Component {
             overScrollMode='never'
             renderError={errorName => (
               <View style={styles.errorView}>
-                <View style={{ flex: 1, alignItems: 'center', marginTop: 40 }}>
+                <View style={{ flex: 1, alignItems: 'center', marginTop: '15%' }}>
                   <Icon
                     name='warning'
                     type='material'
@@ -320,7 +320,6 @@ class ControllerProject extends Component {
                     size={50}
                   />
                   <Text>Si è verificato un errore nel caricamento del video</Text>
-                  <Text>{errorName}</Text>
                 </View>
               </View>
             )}
