@@ -39,7 +39,7 @@ export default styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     height: "30%",
-    marginVertical: 30
+    marginVertical: 20
   },
   
   boxContainer: {
@@ -120,7 +120,21 @@ export default styles = StyleSheet.create({
 
   video: {
     height: "30%",
-    width: "100%"
+    width: "95%",
+    marginHorizontal: "2.5%",
+    marginVertical: 10,
+    borderColor: '#444',
+    borderWidth: 1,
+    borderRadius: 3,
+    elevation: 10,
+  },
+
+  speedBox: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: '30%',
+    backgroundColor: 'rgba(20,20,20,0.3)'
   },
 
   logoAbout: {

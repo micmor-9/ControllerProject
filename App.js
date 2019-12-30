@@ -47,7 +47,8 @@ class ControllerProject extends Component {
       resetStatus: false,
       lightStatus: false,
       videoStatus: false,
-      creditVisible: false
+      creditVisible: false,
+      dataReceived: '-'
     }
   }
 
@@ -69,8 +70,19 @@ class ControllerProject extends Component {
       if (this.state.device) {
         Toast.showShortBottom(`La connessione al dispositivo ${this.state.device.name} si è interrotta`)
       }
-      this.setState({ connected: false })
+      this.setState({ connected: false, dataReceived: '-' })
     })
+    BluetoothSerial.withDelimiter('\r').then(() => {
+      counter = 0
+      BluetoothSerial.on('read', data => {
+        counter++;
+        if (counter == 50) {
+          counter = 0;
+          console.log(`DATA: ${data.data}`);
+          this.setState({ dataReceived: data.data });
+        }
+      });
+    });
   }
 
   /**
@@ -208,7 +220,7 @@ class ControllerProject extends Component {
   sendMovement(p, a) {
     var angleString = '(~' + a.toString() + ')';
     var powerString = '(^' + p.toString() + ')';
-    var stringToSend = angleString + ':' + powerString;
+    var stringToSend = angleString + '' + powerString;
     console.log(stringToSend);
     this.writePackets(stringToSend, stringToSend.length);
   }
@@ -310,6 +322,7 @@ class ControllerProject extends Component {
             source={{ uri: this.state.wifiIp }}
             scrollEnabled={false}
             overScrollMode='never'
+            startInLoadingState={true}
             renderError={errorName => (
               <View style={styles.errorView}>
                 <View style={{ flex: 1, alignItems: 'center', marginTop: '15%' }}>
