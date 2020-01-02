@@ -396,6 +396,13 @@ class ControllerProject extends Component {
           />
         </View>
 
+        <View style={styles.speedmeter}>
+            <Text style={styles.speedText}>VELOCITÀ</Text>
+            <Text style={styles.speedData}>{this.state.dataReceived}</Text>
+            <Text style={styles.speedText}>POSIZIONE</Text>
+            <Text style={styles.speedData}>{this.state.dataReceived}</Text>
+        </View>
+
         <View style={styles.logoAbout}>
           <Image
             source={require('./images/logo_sitael.png')}

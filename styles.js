@@ -39,7 +39,7 @@ export default styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     height: "30%",
-    marginVertical: 20
+    marginVertical: 10
   },
   
   boxContainer: {
@@ -154,6 +154,31 @@ export default styles = StyleSheet.create({
   aboutIcon: {
     flex: 1,
     alignItems: 'center'
+  },
+
+  speedmeter: {
+    flex: 0.5,
+    backgroundColor: '#004c8b',
+    justifyContent: 'space-around',
+    flexDirection: 'row'
+  },
+
+  speedText: {
+    flex: 2,
+    color: 'white',
+    textAlign: 'center',
+    fontStyle: 'italic',
+    textAlignVertical: 'center',
+    fontSize: 20,
+  },
+
+  speedData: {
+    flex: 1,
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    textAlignVertical: 'center',
+    fontSize: 20,
   },
 
   overlayContent: {
