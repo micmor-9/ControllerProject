@@ -70,14 +70,14 @@ class ControllerProject extends Component {
       if (this.state.device) {
         Toast.showShortBottom(`La connessione al dispositivo ${this.state.device.name} si è interrotta`)
       }
-      this.setState({ connected: false, dataReceived: '-' })
+      this.setState({ connected: false, dataReceived: '' })
     })
     BluetoothSerial.withDelimiter('\r').then(() => {
       counter = 0
       BluetoothSerial.on('read', data => {
         counter++;
         var newState = '';
-        if (counter == 50) {
+        if (counter == 10) {
           counter = 0;
           console.log(`DATA: ${data.data}`);
           newState = this.state.dataReceived + ' ' + data.data;
@@ -327,7 +327,7 @@ class ControllerProject extends Component {
             startInLoadingState={true}
             renderError={errorName => (
               <View style={styles.errorView}>
-                <View style={{ flex: 1, alignItems: 'center', marginTop: '15%' }}>
+                <View style={{ flex: 1, alignItems: 'center', marginTop: '20%' }}>
                   <Icon
                     name='warning'
                     type='material'
