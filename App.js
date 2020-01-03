@@ -259,13 +259,7 @@ class ControllerProject extends Component {
     this.write('(R1)');
   }
 
-  //Funzione pulsante play
-  playVideo() {
-    this.webview.stopLoading();
-    this.webview.reload();
-  }
-
-  //Funzione pulsante light
+//Funzione pulsante light
   lightButtonHandler() {
     if (this.state.lightStatus == false) {
       this.setState({ lightStatus: true });
@@ -278,6 +272,12 @@ class ControllerProject extends Component {
     }
   }
 
+  //Funzione pulsante ricarica
+  playVideo() {
+    this.webview.stopLoading();
+    this.webview.reload();
+  }
+
   showCredits() {
     this.setState({ creditVisible: true })
   }
@@ -288,7 +288,7 @@ class ControllerProject extends Component {
       <View style={{ flex: 1 }}>
         <StatusBar backgroundColor="#00255d" barStyle="light-content" />
         <View style={styles.topBar}>
-          <Text style={styles.heading}>Robot Controller</Text>
+          <Text style={styles.heading}>Robot Pad</Text>
           <View style={styles.enableInfoWrapper}>
             <TouchableOpacity onPress={() => { this.playVideo() }} style={styles.topBarButton}>
               <Image
@@ -365,6 +365,7 @@ class ControllerProject extends Component {
             reverse={!this.state.powerStatus}
             onPress={() => this.powerButtonHandler()}
             onLongPress={() => Toast.showShortBottom('Accensione')}
+            disabled={!this.state.connected}
           />
           <Icon
             name='highlight'
@@ -375,6 +376,7 @@ class ControllerProject extends Component {
             reverse={!this.state.lightStatus}
             onPress={() => this.lightButtonHandler()}
             onLongPress={() => Toast.showShortBottom('Luce')}
+            disabled={!this.state.connected}
           />
           <Icon
             name='report'
@@ -385,6 +387,7 @@ class ControllerProject extends Component {
             reverse={!this.state.testStatus}
             onPress={() => this.testButtonHandler()}
             onLongPress={() => Toast.showShortBottom('Test')}
+            disabled={!this.state.connected}
           />
           <Icon
             name='refresh'
@@ -395,6 +398,7 @@ class ControllerProject extends Component {
             reverse={true}
             onPress={() => this.resetButtonHandler()}
             onLongPress={() => Toast.showShortBottom('Reset')}
+            disabled={!this.state.connected}
           />
         </View>
 
