@@ -39,7 +39,7 @@ export default styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     height: "30%",
-    marginVertical: 10
+    marginVertical: 5
   },
   
   boxContainer: {
@@ -129,14 +129,6 @@ export default styles = StyleSheet.create({
     elevation: 10,
   },
 
-  speedBox: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: '30%',
-    backgroundColor: 'rgba(20,20,20,0.3)'
-  },
-
   logoAbout: {
     flexDirection: 'row',
     flex: 1,
@@ -157,28 +149,28 @@ export default styles = StyleSheet.create({
   },
 
   speedmeter: {
-    flex: 0.5,
+    flex: 1,
     backgroundColor: '#004c8b',
     justifyContent: 'space-around',
     flexDirection: 'row'
   },
 
   speedText: {
-    flex: 2,
     color: 'white',
     textAlign: 'center',
-    fontStyle: 'italic',
     textAlignVertical: 'center',
-    fontSize: 20,
+    fontSize: 16,
+    marginHorizontal: 10
   },
 
   speedData: {
-    flex: 1,
-    color: 'white',
+    backgroundColor: 'white',
+    margin: 8,
+    borderRadius: 10,
     textAlign: 'center',
     fontWeight: 'bold',
     textAlignVertical: 'center',
-    fontSize: 20,
+    fontSize: 13,
   },
 
   overlayContent: {

@@ -1,7 +1,7 @@
 import Toast from '@remobile/react-native-toast'
 import { Buffer } from 'buffer'
 import React, { Component } from 'react'
-import { FlatList, Image, Dimensions, Linking, Modal, Platform, StatusBar, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Dimensions, Linking, Modal, Platform, StatusBar, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { WebView } from 'react-native-webview';
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import AxisPad from 'react-native-axis-pad'
@@ -48,7 +48,7 @@ class ControllerProject extends Component {
       lightStatus: false,
       videoStatus: false,
       creditVisible: false,
-      dataReceived: '-'
+      dataReceived: ''
     }
   }
 
@@ -76,10 +76,12 @@ class ControllerProject extends Component {
       counter = 0
       BluetoothSerial.on('read', data => {
         counter++;
+        var newState = '';
         if (counter == 50) {
           counter = 0;
           console.log(`DATA: ${data.data}`);
-          this.setState({ dataReceived: data.data });
+          newState = this.state.dataReceived + ' ' + data.data;
+          this.setState({ dataReceived: newState });
         }
       });
     });
@@ -397,10 +399,19 @@ class ControllerProject extends Component {
         </View>
 
         <View style={styles.speedmeter}>
-            <Text style={styles.speedText}>VELOCITÀ</Text>
-            <Text style={styles.speedData}>{this.state.dataReceived}</Text>
-            <Text style={styles.speedText}>POSIZIONE</Text>
-            <Text style={styles.speedData}>{this.state.dataReceived}</Text>
+          <Text style={styles.speedText}>CONSOLE</Text>
+          <ScrollView
+            ref={ref => this.scrollView = ref}
+            style={styles.speedData}
+            alwaysBounceVertical={true}
+            onContentSizeChange={(contentWidth, contentHeight) => {
+              this.scrollView.scrollToEnd({ animated: false });
+            }}
+            >
+              <Text style={{ flex: 1 }}>
+              {this.state.dataReceived}
+            </Text>
+          </ScrollView>
         </View>
 
         <View style={styles.logoAbout}>
